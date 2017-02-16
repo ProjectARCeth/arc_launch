@@ -1,6 +1,15 @@
 #Mode(teach or repeat).
 mode/TEACH_REPEAT: 'teach'
 
+#Sensors and programs.
+sensors/GPS: false;
+sensors/LASER: false;
+sensors/VI: true;
+program/ORBSLAM: false;
+program/ROVIO: false;
+program/OBSTACLE_DETECTION: false;
+# TODO: Regler an-und ausschalten.
+
 #Car specific parameters.
 erod/DISTANCE_WHEEL_AXES: 2.3; #[m]
 erod/LENGTH_WHEEL_AXIS: 1.6;  #[m]
