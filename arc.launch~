@@ -2,14 +2,29 @@
 	
 <launch>
 
-  <node name="state_estimation" pkg="arc_state_estimation" type="state_estimation" output="screen">
-	<rosparam command="load" file="$(find arc_launch)/arc.yaml" />
-  </node>
+  <rosparam command="load" file="$(find arc_launch)/arc.yaml" />
 
-  <node pkg="rviz" name="myrviz" type="rviz"/>
+  <arg name="GPS" value="false" />
+  <arg name="VI" value="false" /> 
+  <arg name="VELODYNE" value="false" />
+  <arg name="ROVIO" value="true" />	
+  <arg name="ORB_SLAM" value="false" />
+  <arg name="OBSTACLE_DETECTION" value="false" />
+  <arg name="CONTROLLING" value="false" />
+  <arg name="RVIZ" value="false" />
+  <arg name="ROSBAG_RECORD" value="false" />
+  <arg name="ROSBAG_RECORD_PATH" value="~/Schreibtisch/test.bag" /> 
+  <arg name="ROSBAG_PLAY" value="false" /> 
+  <arg name="ROSBAG_PLAY_PATH" value="~/Schreibtisch/test.bag" />
+
+  <!-- starting state estimation node -->
+  <node name="state_estimation" pkg="arc_state_estimation" type="state_estimation" output="screen" />
+
+  <!-- starting rviz visualisation -->
+  <node pkg="rviz" name="myrviz" type="rviz" if="$(arg RVIZ)"/>
 
   <!-- starting GPS -->
-  <node name="gps" pkg="ublox_gps" type="ublox_gps" output="screen">
+  <node name="gps" pkg="ublox_gps" type="ublox_gps" output="screen" if="$(arg GPS)">
    <param name="device" type="string" value="/dev/ttyACM0"/>
    <param name="frame_id" type="string" value="gps"/>
    <param name="baudrate" type="int" value="57600"/>
@@ -24,28 +39,66 @@
    <param name="ublox_version" type="int" value="8"/>
    <param name="initializing_samples" type="int" value="50"/>
   </node>
+
+  <!-- starting VI - Sensor -->
+  <node name="visensor_node" pkg="visensor_node" type="visensor_node" output="screen" if="$(arg VI)" />
+
+  <!-- starting Velodyne - Laser - Sensor -->
+  <group if="$(arg VELODYNE)">
+  	<arg name="calibration" default="$(find velodyne_pointcloud)/params/VLP16db.yaml"/>
+  	<arg name="device_ip" default="" />
+  	<arg name="frame_id" default="velodyne" />
+  	<arg name="manager" default="$(arg frame_id)_nodelet_manager" />
+  	<arg name="max_range" default="130.0" />
+  	<arg name="min_range" default="0.4" />
+  	<arg name="pcap" default="" />
+  	<arg name="port" default="2368" />
+  	<arg name="read_fast" default="false" />
+  	<arg name="read_once" default="false" />
+  	<arg name="repeat_delay" default="0.0" />
+  	<arg name="rpm" default="600.0" />
+  	<include file="$(find velodyne_driver)/launch/nodelet_manager.launch">
+    		<arg name="device_ip" value="$(arg device_ip)"/>
+    		<arg name="frame_id" value="$(arg frame_id)"/>
+    		<arg name="manager" value="$(arg manager)" />
+    		<arg name="model" value="VLP16"/>
+    		<arg name="pcap" value="$(arg pcap)"/>
+    		<arg name="port" value="$(arg port)"/>
+    		<arg name="read_fast" value="$(arg read_fast)"/>
+    		<arg name="read_once" value="$(arg read_once)"/>
+    		<arg name="repeat_delay" value="$(arg repeat_delay)"/>
+   	  	<arg name="rpm" value="$(arg rpm)"/>
+ 	 </include>
+  	<include file="$(find velodyne_pointcloud)/launch/cloud_nodelet.launch">
+   		<arg name="calibration" value="$(arg calibration)"/>
+    		<arg name="manager" value="$(arg manager)" />
+    		<arg name="max_range" value="$(arg max_range)"/>
+    		<arg name="min_range" value="$(arg min_range)"/>
+  	</include>
+   </group>
 	
   <!-- starting Rovio -->
-  <node pkg="rovio" type="rovio_node" name="rovio" output="screen">
+  <node pkg="rovio" type="rovio_node" name="rovio" output="screen" if="$(arg ROVIO)">
    <param name="filter_config" value="$(find rovio)/cfg/rovio_test.info"/>
    <param name="camera0_config" value="$(find rovio)/cfg/rovio_cam0.yaml"/>
    <param name="camera1_config" value="$(find rovio)/cfg/rovio_cam1.yaml"/>
   </node>
 
   <!-- starting ORB_SLAM (VOC-PATH CFG-PATH USE-VIEWER REUSE-OLD-MAP NEW-MAP-PATH OLD-MAP-PATH)--> 
-  <node pkg="orb_slam2" type="stereo" name="stereo" args="$(find orb_slam2)/Vocabulary/ORBvoc.txt   $(find orb_slam2)/cfg/ARC.yaml true false latest_map.bin old_map.bin" output="screen" >
-  <remap from="/camera/left/image_raw" to="/cam0/image_raw"/>
-  <remap from="/camera/right/image_raw" to="/cam1/image_raw"/>
+  <node pkg="orb_slam2" type="stereo" name="stereo" args="$(find orb_slam2)/Vocabulary/ORBvoc.txt   $(find orb_slam2)/cfg/ARC.yaml true false latest_map.bin old_map.bin" output="screen" if="$(arg ORB_SLAM)" >
+  	<remap from="/camera/left/image_raw" to="/cam0/image_raw"/>
+  	<remap from="/camera/right/image_raw" to="/cam1/image_raw"/>
   </node>
 
-  <!-- transform (VI to velodyne) publisher node (needed for periodic assembler) --> 
+  <!-- tf_tree transformation -->
   <node pkg="tf" type="static_transform_publisher" name="rovio_to_velodyne_broadcaster" args="0.0 0.9 -1.0 0.5 0.5 0.5 -0.5 vi velodyne 100" /> 
-  <!-- transform (velodyne to rear_axle) publisher node (needed for periodic assembler) --> 
   <node pkg="tf" type="static_transform_publisher" name="velodyne_to_rear_axle_broadcaster" args="-0.5786 0.0 -1.0705 0.0 0.0 0.0 1.0 velodyne rear_axle 100" /> 
-
-  <!-- path frame --> 
   <node pkg="tf" type="static_transform_publisher" name="path" args="0.0 0.0 0.0 0.0 0.0 0.0 1.0 odom path 100" />
-	
+
+  <!-- Recording and playing rosbag -->
+  <node pkg="rosbag" type="record" output="screen" args="--clock $(arg ROSBAG_RECORD_PATH)" if="$(arg ROSBAG_RECORD)" />
+  <node pkg="rosbag" type="play" output="screen" args="$(arg ROSBAG_PLAY_PATH)" if="$(arg ROSBAG_PLAY)" />
+
 </launch>
 
 

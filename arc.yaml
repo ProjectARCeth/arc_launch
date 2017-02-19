@@ -1,25 +1,26 @@
 #Mode(teach or repeat).
 mode/TEACH_REPEAT: 'teach'
 
-#Sensors and programs.
-sensors/GPS: false;
-sensors/LASER: false;
-sensors/VI: true;
-program/ORBSLAM: false;
-program/ROVIO: false;
-program/OBSTACLE_DETECTION: false;
-# TODO: Regler an-und ausschalten.
+#Sensors and programs. --> ALSO CHANGE IN LAUNCH FILE !
+sensors/GPS: false
+sensors/VELODYNE: false
+sensors/VI: false
+program/ORBSLAM: false
+program/ROVIO: true
+program/OBSTACLE_DETECTION: false
+program/RVIZ: false
+# TODO: Change in launch file ausmerzen.
 
 #Car specific parameters.
-erod/DISTANCE_WHEEL_AXES: 2.3; #[m]
-erod/LENGTH_WHEEL_AXIS: 1.6;  #[m]
+erod/DISTANCE_WHEEL_AXES: 2.3  #[m]
+erod/LENGTH_WHEEL_AXIS: 1.6  #[m]
 
 #General code parameters.
-general/QUEUE_LENGTH: 10;  # proportional to update frequency.
-general/CURRENT_ARRAY_SEARCHING_WIDTH: 4.0;  #[m]
+general/QUEUE_LENGTH: 10  # proportional to update frequency.
+general/CURRENT_ARRAY_SEARCHING_WIDTH: 4.0  #[m]
 
 # Safety parameters.
-safety/MAX_DEVIATION_FROM_TEACH_PATH: 100.0;  #[m]
+safety/MAX_DEVIATION_FROM_TEACH_PATH: 100.0  #[m]
 
 #Path files.
 files/LAST_PATH_FILENAME: 'last_path'
