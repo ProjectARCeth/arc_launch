@@ -4,21 +4,23 @@
 
   <rosparam command="load" file="$(find arc_launch)/arc.yaml" />
 
+  <arg name="GUI" value="false" />
   <arg name="GPS" value="false" />
   <arg name="VI" value="false" /> 
   <arg name="VELODYNE" value="false" />
   <arg name="ROVIO" value="true" />	
   <arg name="ORB_SLAM" value="false" />
-  <arg name="OBSTACLE_DETECTION" value="false" />
+  <arg name="OBSTACLE_DETECTION" value="true" />
   <arg name="CONTROLLING" value="false" />
   <arg name="RVIZ" value="false" />
-  <arg name="ROSBAG_RECORD" value="false" />
-  <arg name="ROSBAG_RECORD_PATH" value="~/Schreibtisch/test.bag" /> 
-  <arg name="ROSBAG_PLAY" value="false" /> 
-  <arg name="ROSBAG_PLAY_PATH" value="~/Schreibtisch/test.bag" />
+  <arg name="ROSBAG_PLAY" value="true" /> 
+  <arg name="ROSBAG_PLAY_PATH" value="/home/sele/Schreibtisch/5.TestSinus.bag" />
 
   <!-- starting state estimation node -->
   <node name="state_estimation" pkg="arc_state_estimation" type="state_estimation" output="screen" />
+
+  <!-- starting GUI -->
+  <node name="arc_gui" pkg="arc_viewer" type="arc_gui" output="screen" if="$(arg GUI)" />
 
   <!-- starting rviz visualisation -->
   <node pkg="rviz" name="myrviz" type="rviz" if="$(arg RVIZ)"/>
@@ -95,9 +97,11 @@
   <node pkg="tf" type="static_transform_publisher" name="velodyne_to_rear_axle_broadcaster" args="-0.5786 0.0 -1.0705 0.0 0.0 0.0 1.0 velodyne rear_axle 100" /> 
   <node pkg="tf" type="static_transform_publisher" name="path" args="0.0 0.0 0.0 0.0 0.0 0.0 1.0 odom path 100" />
 
+  <!--starting obstacle-detection -->
+  <node name="obstacle_detection_node" pkg="arc_obstacle_detection" type="obstacle_detection_node" output="screen" if="$(arg OBSTACLE_DETECTION)" />
+
   <!-- Recording and playing rosbag -->
-  <node pkg="rosbag" type="record" output="screen" args="--clock $(arg ROSBAG_RECORD_PATH)" if="$(arg ROSBAG_RECORD)" />
-  <node pkg="rosbag" type="play" output="screen" args="$(arg ROSBAG_PLAY_PATH)" if="$(arg ROSBAG_PLAY)" />
+  <node pkg="rosbag" type="play" output="screen" name="bag" args="$(arg ROSBAG_PLAY_PATH)" if="$(arg ROSBAG_PLAY)" />
 
 </launch>
 
