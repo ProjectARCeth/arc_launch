@@ -1,16 +1,3 @@
-#Mode(teach or repeat).
-mode/TEACH_REPEAT: 'teach'
-
-#Sensors and programs. --> ALSO CHANGE IN LAUNCH FILE !
-sensors/GPS: false
-sensors/VELODYNE: false
-sensors/VI: false
-program/ORBSLAM: false
-program/ROVIO: true
-program/OBSTACLE_DETECTION: false
-program/RVIZ: false
-# TODO: Change in launch file ausmerzen.
-
 #Car specific parameters.
 erod/DISTANCE_WHEEL_AXES: 2.3  #[m]
 erod/LENGTH_WHEEL_AXIS: 1.6  #[m]
@@ -21,6 +8,8 @@ general/CURRENT_ARRAY_SEARCHING_WIDTH: 4.0  #[m]
 
 # Safety parameters.
 safety/MAX_DEVIATION_FROM_TEACH_PATH: 100.0  #[m]
+safety/MIN_SHUTDOWN_VELOCITY: 1.0 #[m/s]
+safety/MAX_ORIENTATION_DIVERGENCE: 10 #[deg]
 
 #Path files.
 files/LAST_PATH_FILENAME: 'last_path'

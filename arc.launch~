@@ -4,13 +4,13 @@
 
   <rosparam command="load" file="$(find arc_launch)/arc.yaml" />
 
-  <arg name="GUI" value="false" />
+  <arg name="GUI" value="true" />
   <arg name="GPS" value="false" />
   <arg name="VI" value="false" /> 
-  <arg name="VELODYNE" value="false" />
+  <arg name="VELODYNE" value="true" />
   <arg name="ROVIO" value="true" />	
   <arg name="ORB_SLAM" value="false" />
-  <arg name="OBSTACLE_DETECTION" value="true" />
+  <arg name="OBSTACLE_DETECTION" value="false" />
   <arg name="CONTROLLING" value="false" />
   <arg name="RVIZ" value="false" />
   <arg name="ROSBAG_PLAY" value="true" /> 
