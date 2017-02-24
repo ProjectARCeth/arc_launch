@@ -4,11 +4,12 @@
 
   <rosparam command="load" file="$(find arc_launch)/arc.yaml" />
 
-  <arg name="GUI" value="true" />
+  <arg name="GUI" value="false" />
+  <arg name="CONTROLLER" value="true" />
   <arg name="GPS" value="false" />
   <arg name="VI" value="false" /> 
-  <arg name="VELODYNE" value="true" />
-  <arg name="ROVIO" value="true" />	
+  <arg name="VELODYNE" value="false" />
+  <arg name="ROVIO" value="false" />	
   <arg name="ORB_SLAM" value="false" />
   <arg name="OBSTACLE_DETECTION" value="false" />
   <arg name="CONTROLLING" value="false" />
@@ -16,11 +17,22 @@
   <arg name="ROSBAG_PLAY" value="true" /> 
   <arg name="ROSBAG_PLAY_PATH" value="/home/sele/Schreibtisch/5.TestSinus.bag" />
 
+  
+  <!-- starting GUI -->
+  <node name="arc_gui" pkg="arc_viewer" type="arc_gui" output="screen" if="$(arg GUI)" />	
+	
+  <!-- starting Controller -->
+  <node pkg="joy" type="joy_node" name="ps3_joy" output="screen" if="$(arg CONTROLLER)" />
+    <param name="dev" type="string" value="/dev/input/js0" />
+    <param name="deadzone" value="0.12" />
+  </node>
+  <node pkg="diagnostic_aggregator" type="aggregator_node" name="diagnostic_aggregator" if="$(arg CONTROLLER)" />
+    <rosparam command="load" file="$(find ps3joy)/diagnostics.yaml" />
+  </node>
+  <node name="ps_control" type="ps_control" pkg="arc_viewer" output="screen" if="$(arg CONTROLLER)" />	
+
   <!-- starting state estimation node -->
   <node name="state_estimation" pkg="arc_state_estimation" type="state_estimation" output="screen" />
-
-  <!-- starting GUI -->
-  <node name="arc_gui" pkg="arc_viewer" type="arc_gui" output="screen" if="$(arg GUI)" />
 
   <!-- starting rviz visualisation -->
   <node pkg="rviz" name="myrviz" type="rviz" if="$(arg RVIZ)"/>
@@ -84,10 +96,10 @@
    <param name="filter_config" value="$(find rovio)/cfg/rovio_test.info"/>
    <param name="camera0_config" value="$(find rovio)/cfg/rovio_cam0.yaml"/>
    <param name="camera1_config" value="$(find rovio)/cfg/rovio_cam1.yaml"/>
-  </node>
+  </node>dkdkdkkk
 
   <!-- starting ORB_SLAM (VOC-PATH CFG-PATH USE-VIEWER REUSE-OLD-MAP NEW-MAP-PATH OLD-MAP-PATH)--> 
-  <node pkg="orb_slam2" type="stereo" name="stereo" args="$(find orb_slam2)/Vocabulary/ORBvoc.txt   $(find orb_slam2)/cfg/ARC.yaml true false latest_map.bin old_map.bin" output="screen" if="$(arg ORB_SLAM)" >
+  <node pkg="orb_slam2" type="stereo" name="stereo" args="$(find orb_slam2)/../../../Vocabulary/ORBvoc.txt   $(find orb_slam2)/../../Stereo/ARC.yaml true" output="screen" if="$(arg ORB_SLAM)" >
   	<remap from="/camera/left/image_raw" to="/cam0/image_raw"/>
   	<remap from="/camera/right/image_raw" to="/cam1/image_raw"/>
   </node>
