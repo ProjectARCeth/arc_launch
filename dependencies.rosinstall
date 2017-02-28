@@ -54,3 +54,7 @@
 - git:
    local-name: catkin_simple 
    uri: https://github.com/catkin/catkin_simple
+- git:
+   local-name: RSLAM
+   uri: https://github.com/ProjectARCeth/RSLAM
+   version: save_load_map
