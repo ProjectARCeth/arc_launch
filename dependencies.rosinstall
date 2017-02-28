@@ -25,12 +25,14 @@
 - git:
    local-name: guard
    uri: https://github.com/ProjectARCeth/guard
+   version: moritz_try
 - git:
    local-name: interpolation
    uri: https://github.com/ProjectARCeth/interpolation
 - git:
    local-name: rovio
    uri: https://github.com/ProjectARCeth/rovio
+   version: velocity
 - git:
    local-name: pcl_catkin
    uri: git@github.com:ethz-asl/pcl_catkin
@@ -38,4 +40,21 @@
 - git:
    local-name: kindr
    uri: git@github.com:ethz-asl/kindr
-
+- git:
+   local-name: visensor_node
+   uri: git@github.com:ethz-asl/visensor_node
+- git: 
+   local-name: velodyne
+   uri: https://github.com/ros-drivers/velodyne
+- git:
+   local-name: eigen_catkin 
+   uri: git@github.com:ethz-asl/eigen_catkin
+- git:
+   local-name: libvisensor 
+   uri: git@github.com:ethz-asl/libvisensor
+- git:
+   local-name: catkin_simple 
+   uri: git@github.com:ethz-asl/catkin_simple
+- git:
+   local-name: ackermann_msgs
+   uri: https://github.com/ros-drivers/ackermann_msgs
