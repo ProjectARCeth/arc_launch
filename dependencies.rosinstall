@@ -2,11 +2,14 @@
    local-name: arc_launch
    uri: https://github.com/ProjectARCeth/arc_launch
 - git:
-   local-name: arc_tools
-   uri: https://github.com/ProjectARCeth/arc_tools
+   local-name: ackermann_msgs
+   uri: https://github.com/ros-drivers/ackermann_msgs
 - git:
    local-name: arc_msgs
    uri: https://github.com/ProjectARCeth/arc_msgs
+- git:
+   local-name: arc_tools
+   uri: https://github.com/ProjectARCeth/arc_tools
 - git:
    local-name: arc_viewer
    uri: https://github.com/ProjectARCeth/arc_viewer
@@ -34,10 +37,6 @@
    uri: https://github.com/ProjectARCeth/rovio
    version: velocity
 - git:
-   local-name: pcl_catkin
-   uri: git@github.com:ethz-asl/pcl_catkin
-   version: master
-- git:
    local-name: kindr
    uri: git@github.com:ethz-asl/kindr
 - git:
@@ -55,6 +54,3 @@
 - git:
    local-name: catkin_simple 
    uri: git@github.com:ethz-asl/catkin_simple
-- git:
-   local-name: ackermann_msgs
-   uri: https://github.com/ros-drivers/ackermann_msgs
