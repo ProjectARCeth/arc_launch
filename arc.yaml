@@ -8,6 +8,8 @@ erod/WHEEL_DIAMETER: 0.5 #[m]
 #General code parameters.
 general/CURRENT_ARRAY_SEARCHING_WIDTH: 4.0  #[m]
 generel/MODE_INIT: false # Teach(0), Repeat(1).
+general/NI_HOSTNAME: 10.0.0.5 #National Instrument IP address.
+general/NI_PORT: 61557 #National Instrument Port.
 general/QUEUE_LENGTH: 10  # proportional to update frequency.
 
 #Topics.
