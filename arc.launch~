@@ -4,9 +4,9 @@
 
   <rosparam command="load" file="$(find arc_launch)/arc.yaml" />
 
-  <arg name="NI_CLIENT" value="true" />
-  <arg name="STATE_ESTIMATION" value="false" />
-  <arg name="GUI" value="false" />
+  <arg name="NI_CLIENT" value="false" />
+  <arg name="STATE_ESTIMATION" value="true" />
+  <arg name="GUI" value="true" />
   <arg name="CONTROLLER" value="false" />
   <arg name="GPS" value="false" />
   <arg name="VI" value="false" /> 
@@ -16,8 +16,8 @@
   <arg name="OBSTACLE_DETECTION" value="false" />
   <arg name="CONTROLLING" value="false" />
   <arg name="RVIZ" value="false" />
-  <arg name="ROSBAG_PLAY" value="false" /> 
-  <arg name="ROSBAG_PLAY_PATH" value="/home/sele/Schreibtisch/posZ.bag" />
+  <arg name="ROSBAG_PLAY" value="true" /> 
+  <arg name="ROSBAG_PLAY_PATH" value="/home/sele/Schreibtisch/5.TestSinus.bag" />
   
   <!-- starting GUI -->
   <node name="arc_gui" pkg="arc_viewer" type="arc_gui" output="screen" if="$(arg GUI)" />	
