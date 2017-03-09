@@ -7,7 +7,7 @@
   <arg name="NI_CLIENT" value="false" />
   <arg name="STATE_ESTIMATION" value="true" />
   <arg name="GUI" value="false" />
-  <arg name="CONTROLLER" value="false" />
+  <arg name="PS_CONTROLLER" value="false" />
   <arg name="GPS" value="false" />
   <arg name="VI" value="false" /> 
   <arg name="VELODYNE" value="false" />
@@ -27,14 +27,14 @@
   <node name="arc_gui" pkg="arc_viewer" type="arc_gui" output="screen" if="$(arg GUI)" />	
 	
   <!-- starting Controller -->
-  <node pkg="joy" type="joy_node" name="ps3_joy" output="screen" if="$(arg CONTROLLER)" >
+  <node pkg="joy" type="joy_node" name="ps3_joy" output="screen" if="$(arg PS_CONTROLLER)" >
     <param name="dev" type="string" value="/dev/input/js0" />
     <param name="deadzone" value="0.12" />
   </node>
-  <node pkg="diagnostic_aggregator" type="aggregator_node" name="diagnostic_aggregator" if="$(arg CONTROLLER)" >
+  <node pkg="diagnostic_aggregator" type="aggregator_node" name="diagnostic_aggregator" if="$(arg PS_CONTROLLER)" >
     <rosparam command="load" file="$(find ps3joy)/diagnostics.yaml" />
   </node>
-  <node name="ps_control" type="ps_control" pkg="arc_viewer" output="screen" if="$(arg CONTROLLER)" />	
+  <node name="ps_control" type="ps_control" pkg="arc_viewer" output="screen" if="$(arg PS_CONTROLLER)" />	
 
  <!-- starting NI client -->
  <node name="udp_client" type="udp_client" pkg="arc_interface" output="screen" if="$(arg NI_CLIENT)" />

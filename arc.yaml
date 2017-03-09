@@ -4,7 +4,7 @@ erod/DISTANCE_LASER_REAR_AXIS: 0.54968 #[m], parallel to road.
 erod/HEIGHT_LASER_REAR_AXIS: 0.9 #[m], distance from laser to rear axis.
 erod/WIDTH: 1.6071  #[m]
 erod/WIDTH_WHEEL_AXIS: 1.5 #[m], distance wheel joints.
-erod/MAX_STEERING_ANGLE: 0.52359 #[rad] ~PI/6
+erod/MAX_STEERING_ANGLE: 50 #[rad] +-100 ° steering wheel impact.
 erod/MAX_VELOCITY: 19.444 #[m/s] ~70 km/h 
 erod/WHEEL_DIAMETER: 0.5 #[m]  
 
@@ -48,5 +48,5 @@ safety/MAX_ORIENTATION_DIVERGENCE: 10 #[deg]
 safety/MIN_PUBLISH_NOTSTOP_COUNT: 20
 
 #Path files.
-files/LAST_PATH_FILENAME: 'last_path'
-files/CURRENT_PATH_FILENAME: 'current_path'
+files/LAST_PATH_FILENAME: '~/Paths/last_path'
+files/CURRENT_PATH_FILENAME: '~/Paths/current_path'
