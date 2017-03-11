@@ -4,7 +4,9 @@ erod/DISTANCE_LASER_REAR_AXIS: 0.54968 #[m], parallel to road.
 erod/HEIGHT_LASER_REAR_AXIS: 0.9 #[m], distance from laser to rear axis.
 erod/WIDTH: 1.6071  #[m]
 erod/WIDTH_WHEEL_AXIS: 1.5 #[m], distance wheel joints.
-erod/MAX_STEERING_ANGLE: 50 #[rad] +-100 ° steering wheel impact.
+erod/MAX_ACCELERATING_VOLTAGE: 2.0 #[V], max. voltage of throttle.
+erod/MAX_BRAKING_VOLTAGE: 12.0 #[V], max. voltage of braking system.
+erod/MAX_STEERING_ANGLE: 300 #[rad] +-° steering wheel impact.
 erod/MAX_VELOCITY: 19.444 #[m/s] ~70 km/h 
 erod/WHEEL_DIAMETER: 0.5 #[m]  
 
@@ -22,25 +24,25 @@ general/PATH_LENGTH: '10.2' #[m] or full, length of drivable path from beginning
 general/QUEUE_LENGTH: 10  #proportional to update frequency.
 
 #Topics.
-topic/CAR_MODEL_VELOCITY: 'car_model_velocity'
-topic/MODE: 'mode'
-topic/NOTSTOP: 'notstop'
+topic/CAR_MODEL_VELOCITY: 'car_model_velocity' #Linear velocity by velocity model, geometry_msgs::TwistStamped.
+topic/MODE: 'mode' #Teach(0) or Repeat(1), std_msgs::Bool.
+topic/NOTSTOP: 'notstop' #Emergency stop command, std_msgs::Bool.
 topic/OBSTACLE_DISTANCE: 'distance_to_obstacle'
-topic/PATH: 'path'
-topic/PURE_PURSUIT_INFO: 'pure_pursuit_info'
-topic/SHUTDOWN: 'shutdown'
-topic/STATE: 'state'
-topic/STATE_STEERING_ANGLE: 'state_steering_angle'
-topic/STELLGROESSEN: 'stellgroessen'
-topic/STELLGROESSEN_SAFE: 'stellgroessen_safe'
-topic/STOP_NI: 'stop_ni'
-topic/TEACH_PATH_TOPIC: 'path_teach'
-topic/TRACKING_ERROR: 'tracking_error'
-topic/TRACKING_ERROR_VELOCITY: 'tracking_error_vel'
-topic/WHEEL_FRONT_LEFT: 'wheel_front_left'
-topic/WHEEL_FRONT_RIGHT: 'wheel_front_right'
-topic/WHEEL_REAR_LEFT: 'wheel_rear_left'
-topic/WHEEL_REAR_RIGHT: 'wheel_rear_right'
+topic/PATH: 'path' #Current path, nav_msgs::Path.
+topic/PURE_PURSUIT_INFO: 'pure_pursuit_info' #Information about pure pursuit, std_msgs::Float32MultiArray.
+topic/SHUTDOWN: 'shutdown' #Shutdown command, std_msgs::Bool.
+topic/STATE: 'state' #State (position, velocity, path_array_index, stop), arc_msgs::State.
+topic/STATE_STEERING_ANGLE: 'state_steering_angle' #Current steering angle, std_msgs::Float64.
+topic/STELLGROESSEN: 'stellgroessen' #Actuator commands (velocity and steering angle), ackermann_msgs::AckermannDrive.
+topic/STELLGROESSEN_SAFE: 'stellgroessen_safe' #Act. comm. checked by Guarding system->VCU, ackermann_msgs::AckermannDrive.
+topic/STOP_NI: 'stop_ni' #Emergency stop by VCU, std_msgs::Bool.
+topic/TEACH_PATH_TOPIC: 'path_teach' #Teach path, nav_msgs::Path.
+topic/TRACKING_ERROR: 'tracking_error' #Difference between current and teach position, std_msgs::Float64.
+topic/TRACKING_ERROR_VELOCITY: 'tracking_error_vel' #Difference between current and teach velocity, std_msgs::Float64.
+topic/WHEEL_FRONT_LEFT: 'wheel_front_left' #Wheel sensor callback, std_msgs::Float64.
+topic/WHEEL_FRONT_RIGHT: 'wheel_front_right' #Wheel sensor callback, std_msgs::Float64.
+topic/WHEEL_REAR_LEFT: 'wheel_rear_left' #Wheel sensor callback, std_msgs::Float64.
+topic/WHEEL_REAR_RIGHT: 'wheel_rear_right' #Wheel sensor callback, std_msgs::Float64.
 
 # Safety parameters.
 safety/MAX_DEVIATION_FROM_TEACH_PATH: 100.0  #[m]
