@@ -17,7 +17,6 @@ sensor/CAM_INIT_QUAT_Z: -0.5 #Initial orientation measurement of cam.
 sensor/CAM_INIT_QUAT_W: 0 #Initial orientation measurement of cam.
 
 #General code parameters.
-generel/MODE_INIT: true #Teach(0), Repeat(1).
 general/MY_PORT: 8010 #My computer port.
 general/NI_PORT: 8001 #National Instrument Port.
 general/PATH_LENGTH: '10.2' #[m] or full, length of drivable path from beginning (original ->edited).
@@ -52,9 +51,3 @@ safety/MIN_PUBLISH_NOTSTOP_COUNT: 20
 
 #Control parameters.
 control/CURRENT_ARRAY_SEARCHING_WIDTH: 4.0  #[m]
-
-
-#Path files (Paths folder in home directory).
-files/LAST_PATH_FILENAME: '../Paths/last_path_edited' #Txt file including last (shortened) path.
-files/LAST_PATH__FILENAME: '../Paths/last_path' #Txt file including last path.
-files/CURRENT_PATH_FILENAME: '../Paths/current_path' #Txt file including current path.

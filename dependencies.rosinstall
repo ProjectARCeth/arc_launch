@@ -20,6 +20,9 @@
    local-name: arc_state_estimation
    uri: https://github.com/ProjectARCeth/arc_state_estimation
 - git:
+   local-name: joystick-drivers
+   uri: https://github.com/ProjectARCeth/joystick_drivers
+- git:
    local-name: ublox
    uri: https://github.com/ProjectARCeth/ublox
 - git:

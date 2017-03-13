@@ -6,30 +6,26 @@
 #include <string>
 
 //Constants.
-bool MODE;
-std::string LAST_PATH_FILENAME_EDITED;
-std::string LAST_PATH_FILENAME_ORIGINAL;
+std::string PATH_NAME;
 std::string PATH_LENGTH;
 //Declaration of functions.
-void shortenPathFile(std::string original, std::string edited, std::string path_length);
-void copyPathFile(std::string original, std::string edited);
+void shortenPathFile(std::string original, std::string path_length);
+void copyPathFile(std::string original);
 
 int main(int argc, char** argv){
 	//Init ROS.
 	ros::init(argc, argv, "preparation");
 	ros::NodeHandle node;
 	//Getting parameter.
-	node.getParam("/generel/MODE_INIT", MODE);
-	node.getParam("/files/LAST_PATH_FILENAME", LAST_PATH_FILENAME_EDITED);
-	node.getParam("/files/LAST_PATH_ORIGINAL_FILENAME", LAST_PATH_FILENAME_ORIGINAL);
+	PATH_NAME = argv[0];
 	node.getParam("/general/PATH_LENGTH", PATH_LENGTH);
 	//Edit path file, iff repeat mode.
-	if(MODE && PATH_LENGTH != "full") shortenPathFile(LAST_PATH_FILENAME_ORIGINAL, LAST_PATH_FILENAME_EDITED, PATH_LENGTH);
-	if(MODE && PATH_LENGTH == "full") copyPathFile(LAST_PATH_FILENAME_ORIGINAL, LAST_PATH_FILENAME_EDITED);
+	if(PATH_LENGTH != "full") shortenPathFile(PATH_NAME, PATH_LENGTH);
+	if(PATH_LENGTH == "full") copyPathFile(PATH_NAME);
 	return 0;
 }
 
-void shortenPathFile(std::string original, std::string edited, std::string path_length_string){
+void shortenPathFile(std::string original, std::string path_length_string){
 	//Get path length from string.
 	char buffer[20];
 	for (int i=0; i<path_length_string.size(); ++i){
@@ -42,12 +38,13 @@ void shortenPathFile(std::string original, std::string edited, std::string path_
 	fin.open(original_filename.c_str());
 	if(!fin.is_open()){
 	   std::cout<<std::endl<<"PREPARATION: Error with opening of  "
-	            <<original<<std::endl;
+	            <<original_filename<<std::endl;
 	}
 	//Getting original file length.
-	fin.seekg(-1, std::ios_base::end);
-	size_t file_length = fin.tellg();
-	fin.seekg(0, std::ios_base::beg);
+  	fin.seekg (-2, fin.end); 
+  	int file_length = fin.tellg();
+  	std::cout << "file length: " << file_length << std::endl;
+  	fin.seekg (0, fin.beg);
 	//Creating char array containing the original file.
 	char * file = new char [file_length+1];
 	fin.read(file,file_length);
@@ -56,20 +53,22 @@ void shortenPathFile(std::string original, std::string edited, std::string path_
 	fin.close ();
 	//Open output file.
 	std::ofstream fout;
-	std::string edited_filename = edited + ".txt";
+	std::string edited_filename = original + "_edited.txt";
 	fout.open(edited_filename.c_str());
 	if(!fout.is_open()){
 	   std::cout<<std::endl<<"PREPARATION: Error with opening of  "
-	            <<edited<<std::endl;
+	            <<edited_filename<<std::endl;
 	}
 	//Writing into new file until max distance is reached.
 	int i = 0;
 	int array_index;  
 	Eigen::Vector3d position(0,0,0);
+	Eigen::Vector3d last_position(0,0,0);
 	Eigen::Vector4d quat;
 	double velocity;
 	bool stop;
-	while(position.norm()<path_length && i<=file_length && !in_stream.eof()){
+	double path_distance = 0.0;
+	while(position.norm()<path_length && !in_stream.eof()){
 	  //Read.
 	  in_stream>>array_index;
 	  in_stream>>position(0);
@@ -89,16 +88,18 @@ void shortenPathFile(std::string original, std::string edited, std::string path_
            velocity <<" "<<stop<<"|";
       //Indexing.
       i++;
+      path_distance += (last_position-position).norm();
+      last_position = position;
 	}
 	fout.close();
 }
 
-void copyPathFile(std::string original, std::string edited){
+void copyPathFile(std::string original){
 	//Open original file.
 	std::string original_filename = original + ".txt";
 	std::ifstream in_file(original_filename.c_str());
 	//Open edit file.
-	std::string edited_filename = edited + ".txt";
+	std::string edited_filename = original + "_edited.txt";
     std::ofstream out_file(edited_filename.c_str());
     //Copy file.
     out_file << in_file.rdbuf();	

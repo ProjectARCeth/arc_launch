@@ -4,27 +4,32 @@
 
   <rosparam command="load" file="$(find arc_launch)/arc.yaml" />
 
-  <arg name="NI_CLIENT" value="false" />
-  <arg name="STATE_ESTIMATION" value="true" />
-  <arg name="GUI" value="false" />
-  <arg name="PS_CONTROLLER" value="false" />
+  <!-- Sensors -->
   <arg name="GPS" value="false" />
   <arg name="VI" value="false" /> 
   <arg name="VELODYNE" value="false" />
-  <arg name="ROVIO" value="true" />	
-  <arg name="ORB_SLAM" value="true" />
-  <arg name="OBSTACLE_DETECTION" value="false" />
+  <!-- Localisation and state estimation -->
+  <arg name="STATE_ESTIMATION" value="true" />
   <arg name="CONTROLLING" value="false" />
+  <!-- External communication -->
+  <arg name="NI_CLIENT" value="false" />
+  <arg name="PS_CONTROLLER" value="false" />
+  <!-- Safety -->
+  <arg name="OBSTACLE_DETECTION" value="true" />
+  <!-- Visualisation -->
+  <arg name="GUI" value="false" />
   <arg name="RVIZ" value="false" />
-  <arg name="TFTREE" value="false" />
+  <!-- Rosbag -->
   <arg name="ROSBAG_PLAY" value="true" /> 
-  <arg name="ROSBAG_PLAY_PATH" value="/home/sele/Schreibtisch/CLA_Mountains.bag" />
+  <arg name="ROSBAG_PLAY_PATH" value="/home/sele/Schreibtisch/Untitled/2017-03-13-16-19-42.bag" />
+ 
+  <arg name="NAME" default="/home/sele/Paths/test" />
 
   <!-- starting preparation -->
-  <node name="preparation" pkg="arc_launch" type="preparation" output="screen" if="$(arg CONTROLLING)" />
+  <node name="preparation" pkg="arc_launch" type="preparation" output="screen" args="$(arg NAME)" if="$(arg CONTROLLING)" />
   
   <!-- starting state estimation node -->
-  <node name="state_estimation" pkg="arc_state_estimation" type="state_estimation" output="screen" if="$(arg STATE_ESTIMATION)"/> 	
+  <node name="state_estimation" pkg="arc_state_estimation" type="state_estimation" output="screen" args="$(arg NAME)" if="$(arg STATE_ESTIMATION)"/> 	
 
   <!-- starting GUI -->
   <node name="arc_gui" pkg="arc_viewer" type="arc_gui" output="screen" if="$(arg GUI)" />	
@@ -100,23 +105,23 @@
    </group>
 	
   <!-- starting Rovio -->
-  <node pkg="rovio" type="rovio_node" name="rovio" output="screen" if="$(arg ROVIO)">
+  <node pkg="rovio" type="rovio_node" name="rovio" output="screen" if="$(arg STATE_ESTIMATION)">
    <param name="filter_config" value="$(find rovio)/cfg/rovio_test.info"/>
    <param name="camera0_config" value="$(find rovio)/cfg/rovio_cam0.yaml"/>
    <param name="camera1_config" value="$(find rovio)/cfg/rovio_cam1.yaml"/>
   </node>
 
   <!-- starting ORB_SLAM (VOC-PATH CFG-PATH USE-VIEWER)--> 
-  <node pkg="orb_slam2" type="stereo" name="stereo" args="$(find orb_slam2)/../../../Vocabulary/ORBvoc.txt   $(find orb_slam2)/../../Stereo/ARC.yaml true false" output="screen" if="$(arg ORB_SLAM)" >
+  <node pkg="orb_slam2" type="stereo" name="stereo" args="$(find orb_slam2)/../../../Vocabulary/ORBvoc.txt   $(find orb_slam2)/../../Stereo/ARC.yaml true false" output="screen" if="$(arg STATE_ESTIMATION)" >
   	<remap from="/camera/left/image_raw" to="/cam0/image_raw"/>
   	<remap from="/camera/right/image_raw" to="/cam1/image_raw"/>
   </node>
 
   <!-- tf_tree transformation -->
-  <node pkg="tf" type="static_transform_publisher" name="rovio_to_velodyne_broadcaster" args="0.0 0.9 -1.0 0 0 0 0 vi velodyne 100" if="$(arg TFTREE)"/> 
-  <node pkg="tf" type="static_transform_publisher" name="velodyne_to_rear_axle_broadcaster" args="-0.5786 0.0 -1.0705 0.0 0.0 0.0 1.0 velodyne rear_axle 100" if="$(arg TFTREE)" /> 
-  <node pkg="tf" type="static_transform_publisher" name="path" args="0.0 0.0 0.0 0.0 0.0 0.0 1.0 odom path 100" if="$(arg TFTREE)"/> 
-  <node pkg="tf" type="static_transform_publisher" name="teach_path" args="0.0 0.0 0.0 0.0 0.0 0.0 1.0 odom teach_path 100" if="$(arg TFTREE)"/>
+  <node pkg="tf" type="static_transform_publisher" name="rovio_to_velodyne_broadcaster" args="0.0 0.9 -1.0 0 0 0 0 vi velodyne 100" if="$(arg RVIZ)"/> 
+  <node pkg="tf" type="static_transform_publisher" name="velodyne_to_rear_axle_broadcaster" args="-0.5786 0.0 -1.0705 0.0 0.0 0.0 1.0 velodyne rear_axle 100" if="$(arg RVIZ)" /> 
+  <node pkg="tf" type="static_transform_publisher" name="path" args="0.0 0.0 0.0 0.0 0.0 0.0 1.0 odom path 100" if="$(arg RVIZ)"/> 
+  <node pkg="tf" type="static_transform_publisher" name="teach_path" args="0.0 0.0 0.0 0.0 0.0 0.0 1.0 odom teach_path 100" if="$(arg RVIZ)"/>
 
   <!--starting obstacle-detection -->
   <node name="obstacle_detection_node" pkg="arc_obstacle_detection" type="obstacle_detection_node" output="screen" if="$(arg OBSTACLE_DETECTION)" />
