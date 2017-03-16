@@ -17,4 +17,4 @@ chmod +x qt-opensource-linux-x64-5.7.0.run
 ./qt-opensource-linux-x64-5.7.0.run
 
 ##Using
-roslaunch arc_launch arc.launch NAME:=(Desired path to created files)
+roslaunch arc_launch arc.launch Name:=(Desired path to created files) Mode:=(false [Teach] or true [Repeat])

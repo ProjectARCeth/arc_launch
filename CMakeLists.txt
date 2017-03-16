@@ -5,6 +5,10 @@ project(arc_launch)
 find_package(catkin_simple 0.1.0 REQUIRED COMPONENTS
   	roscpp
   	eigen_catkin
+  	std_msgs
+  	sensor_msgs
+  	nav_msgs
+  	geometry_msgs
     catkin_simple REQUIRED
 )
 

@@ -1,49 +1,70 @@
 #Car specific parameters.
 erod/DISTANCE_WHEEL_AXIS: 2.35585  #[m], distance between front and rear axis.
 erod/DISTANCE_LASER_REAR_AXIS: 0.54968 #[m], parallel to road.
+erod/G_EARTH: 9.81 #[m/s²], earth gravitational constant.
 erod/HEIGHT_LASER_REAR_AXIS: 0.9 #[m], distance from laser to rear axis.
-erod/WIDTH: 1.6071  #[m]
+erod/TOTAL_WIDTH: 1.6071  #[m], width of entire car.
 erod/WIDTH_WHEEL_AXIS: 1.5 #[m], distance wheel joints.
 erod/MAX_ACCELERATING_VOLTAGE: 1.0 #[V], max. voltage of throttle.
+erod/MAX_LATERAL_ACCELERATION: 8 #[m/s²], max. lateral acceleration.
 erod/MAX_BRAKING_VOLTAGE: 12.0 #[V], max. voltage of braking system.
-erod/MAX_STEERING_ANGLE: 200 #[rad] +-° steering wheel impact.
-erod/MAX_VELOCITY: 19.444 #[m/s] ~70 km/h 
-erod/WHEEL_DIAMETER: 0.5 #[m]  
+erod/MAX_STEERING_ANGLE: 300 #[rad] +-° steering wheel impact.
+erod/MAX_VELOCITY: 17.5 #[m/s], ~70 km/h.
+erod/MU_HAFT: 0.8 # friction parameter.
+erod/WHEEL_DIAMETER: 0.5 #[m]. 
 
 #Sensor calibration.
-sensor/CAM_INIT_QUAT_X: 0 #Initial orientation measurement of cam.
-sensor/CAM_INIT_QUAT_Y: 0.86 #Initial orientation measurement of cam.
-sensor/CAM_INIT_QUAT_Z: -0.5 #Initial orientation measurement of cam.
-sensor/CAM_INIT_QUAT_W: 0 #Initial orientation measurement of cam.
+sensor/CAM_INIT_QUAT_X: -0.00126 #Initial orientation measurement of cam.
+sensor/CAM_INIT_QUAT_Y: 0.85391 #Initial orientation measurement of cam.
+sensor/CAM_INIT_QUAT_Z: -0.52041 #Initial orientation measurement of cam.
+sensor/CAM_INIT_QUAT_W: 0.00033 #Initial orientation measurement of cam.
 
 #General code parameters.
 general/MY_PORT: 8010 #My computer port.
 general/NI_PORT: 8001 #National Instrument Port.
-general/PATH_LENGTH: '10.2' #[m] or full, length of drivable path from beginning (original ->edited).
 general/QUEUE_LENGTH: 10  #proportional to update frequency.
+general/VCU_PARAMETER_MODE: 'street' #street or lift VCU - velocity control parameter mode.
 
 #Topics.
 topic/CAR_MODEL_VELOCITY: 'car_model_velocity' #Linear velocity by velocity model, geometry_msgs::TwistStamped.
+topic/DANGER_GRID: 'danger_grid' #Dangerous area in front of car, nav_msgs::GridMap.
+topic/GPS_POSITION: 'gps/fix_transform' #Relative GPS position, geometry_msgs::TransformStamped.
+topic/LASER_STOP: 'stop_laser' #Grid map stop bool, std_msgs::Bool.
 topic/MODE: 'mode' #Teach(0) or Repeat(1), std_msgs::Bool.
 topic/NOTSTOP: 'notstop' #Emergency stop command, std_msgs::Bool.
-topic/OBSTACLE_DISTANCE: 'distance_to_obstacle'
+topic/OBSTACLE_DISTANCE: 'distance_to_obstacle' #Distance to nearest obstacles, std_msgs::Float64.
+topic/OBSTACLE_MAP: 'obstacle_gridmap' #Gridmap with all obstacles, nav_msgs::GridMap.
+topic/ORB_SLAM_ODOMETRY: 'orb_slam2/odometry' #Odometry from RSLAM, nav_msgs::Odometry.
+topic/NAVIGATION_INFO: 'navigation_info' #Information about pure pursuit, std_msgs::Float32MultiArray.
 topic/PATH: 'path' #Current path, nav_msgs::Path.
-topic/PURE_PURSUIT_INFO: 'pure_pursuit_info' #Information about pure pursuit, std_msgs::Float32MultiArray.
+topic/READY_FOR_DRIVING: 'ready_for_driving' #Published after checking if all components are ready for driving, std_msgs::Bool.
+topic/READY_FOR_LAUNCHING: 'ready_for_launching' #Published after editing path files for pure pursuit, std_msgs::Bool.
+topic/ROVIO_ODOMETRY: 'rovio/odometry' #Odometry from rovio, nav_msgs::Odometry.
 topic/SHUTDOWN: 'shutdown' #Shutdown command, std_msgs::Bool.
 topic/STATE: 'state' #State (position, velocity, path_array_index, stop), arc_msgs::State.
 topic/STATE_STEERING_ANGLE: 'state_steering_angle' #Current steering angle, std_msgs::Float64.
 topic/STELLGROESSEN: 'stellgroessen' #Actuator commands (velocity and steering angle), ackermann_msgs::AckermannDrive.
 topic/STELLGROESSEN_SAFE: 'stellgroessen_safe' #Act. comm. checked by Guarding system->VCU, ackermann_msgs::AckermannDrive.
 topic/STOP_NI: 'stop_ni' #Emergency stop by VCU, std_msgs::Bool.
-topic/TEACH_PATH_TOPIC: 'path_teach' #Teach path, nav_msgs::Path.
+topic/TEACH_PATH: 'path_teach' #Teach path, nav_msgs::Path.
 topic/TRACKING_ERROR: 'tracking_error' #Difference between current and teach position, std_msgs::Float64.
 topic/TRACKING_ERROR_VELOCITY: 'tracking_error_vel' #Difference between current and teach velocity, std_msgs::Float64.
+topic/VELODYNE_POINTCLOUD: 'velodyne_points' #Laser point cloud, sensor_msgs::PointCloud2.
+topic/VCU_PARAMETER_MODE: 'vcu_parameter_mode' #Velocity control parameter (street, lift, ...), std_msgs::Float64.
+topic/VCU_PING: 'vcu_ping' #Pinging VCU until started, std_msgs::Float64.
+topic/VI_CAMERA_LEFT: 'cam0/image_raw' #Raw VI camera data, senor_msgs::Image.
+topic/VI_CAMERA_RIGHT: 'cam1/image_raw' #Raw VI camera data, senor_msgs::Image.
 topic/WHEEL_FRONT_LEFT: 'wheel_front_left' #Wheel sensor callback, std_msgs::Float64.
 topic/WHEEL_FRONT_RIGHT: 'wheel_front_right' #Wheel sensor callback, std_msgs::Float64.
 topic/WHEEL_REAR_LEFT: 'wheel_rear_left' #Wheel sensor callback, std_msgs::Float64.
 topic/WHEEL_REAR_RIGHT: 'wheel_rear_right' #Wheel sensor callback, std_msgs::Float64.
 
-# Safety parameters.
+#Safety parameters.
+safety/CRITICAL_OBSTACLE_DISTANCE: 2.0 #[m] 
+safety/FOS_VELOCITY: 1.0 #[0-1]
+safety/FOS_DANGERGRID: 1.5 #[>1]
+safety/FOS_BRAKING_DISTANCE: 2.0 #[>1]
+safety/MAX_ABSOLUTE_VELOCITY: 20
 safety/MAX_DEVIATION_FROM_TEACH_PATH: 100.0  #[m]
 safety/MIN_SHUTDOWN_VELOCITY: 1.0 #[m/s]
 safety/MAX_ORIENTATION_DIVERGENCE: 10 #[deg]
@@ -51,3 +72,13 @@ safety/MIN_PUBLISH_NOTSTOP_COUNT: 20
 
 #Control parameters.
 control/CURRENT_ARRAY_SEARCHING_WIDTH: 4.0  #[m]
+control/DISTANCE_INTERPOLATION: 3
+control/K1_LAD_LASER: 2.0
+control/K2_LAD_LASER: 5.0
+control/K1_LAD_S: 0.5 #Control parameter.
+control/K2_LAD_S: 3
+control/K1_LAD_V: 0.5
+control/K2_LAD_V: 3
+control/SHUT_DOWN_TIME: 5
+control/SLOW_DOWN_DISTANCE: 10
+control/V_FREEDOM: 10
