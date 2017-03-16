@@ -9,7 +9,7 @@
   <arg name="VI" value="false" /> 
   <arg name="VELODYNE" value="false" />
   <!-- Localisation and state estimation -->
-  <arg name="STATE_ESTIMATION" value="false" />
+  <arg name="STATE_ESTIMATION" value="true" />
   <!-- Steering and velocity controlling -->
   <arg name="CONTROLLING_STEERING" value="false" />
   <arg name="CONTROLLING_VELOCITY" value="false" />

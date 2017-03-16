@@ -32,7 +32,6 @@
   <arg name="Path_Length" default="full" /> 
 
  <!-- Preparation -->
-
  <node name="preparation" pkg="arc_launch" type="preparation" output="screen" args="$(arg Name) $(arg Mode) $(arg Path_Length) $(arg GPS) $(arg VI) $(arg VELODYNE) $(arg NI_CLIENT) $(arg STATE_ESTIMATION) $(arg OBSTACLE_DETECTION) $(arg GUARD) $(arg CONTROLLING_STEERING) $(arg CONTROLLING_VELOCITY)" />
 
   <!-- GPS -->

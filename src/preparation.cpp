@@ -54,7 +54,7 @@ bool READY_NI_CLIENT = false;
 bool READY_OBSTACLE_DETECTION = false;
 bool READY_ORBSLAM = false;
 bool READY_ROVIO = false;
-bool READY_STATE_ESTIMATION = false;
+bool READY_STATE_ESTIMATION = true;
 bool READY_VELODYNE = false;
 bool READY_VI = false;
 //Subscriber and Publisher.
@@ -135,6 +135,7 @@ int main(int argc, char** argv){
 	ready_for_driving_msg.data = true;
 	ready_driving_pub.publish(ready_for_driving_msg);
 	std::cout << std::endl <<"PREPARATION: Everything initialised, ready to go !" << std::endl;
+	while(ros::ok()){}
 	return 0;
 }
 
