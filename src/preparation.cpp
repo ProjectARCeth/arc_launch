@@ -22,7 +22,6 @@ int QUEUE_LENGTH;
 std::string VCU_PARAMETER_MODE;
 std::string GPS_TOPIC;
 std::string GUARD_TOPIC;
-std::string INTERFACE_TOPIC;
 std::string OBSTACLE_DETECTION_TOPIC;
 std::string ORB_SLAM_TOPIC;
 std::string PURE_PURSUIT_TOPIC; 
@@ -32,7 +31,7 @@ std::string ROVIO_TOPIC;
 std::string STATE_ESTIMATION_TOPIC;
 std::string VELODYNE_TOPIC;
 std::string VCU_PARAMETER_MODE_TOPIC;
-std::string VCU_PING_TOPIC;
+std::string VCU_WORKING_INTERFACE_TOPIC;
 std::string VI_TOPIC;
 //Sensor or node used.
 bool USE_CONTROL_STEERING = true;
@@ -54,19 +53,19 @@ bool READY_NI_CLIENT = false;
 bool READY_OBSTACLE_DETECTION = false;
 bool READY_ORBSLAM = false;
 bool READY_ROVIO = false;
-bool READY_STATE_ESTIMATION = true;
+bool READY_STATE_ESTIMATION = false;
 bool READY_VELODYNE = false;
 bool READY_VI = false;
 //Subscriber and Publisher.
 ros::Subscriber gps_sub;
 ros::Subscriber guard_sub;
-ros::Subscriber interface_sub;
 ros::Subscriber obstacle_detection_sub;
 ros::Subscriber pure_pursuit_sub;
 ros::Subscriber orb_slam_sub;
 ros::Subscriber rovio_sub;
 ros::Subscriber state_estimation_sub;
 ros::Subscriber velodyne_sub;
+ros::Subscriber vcu_sub;
 ros::Subscriber vi_sub;
 ros::Publisher vcu_mode_pub;
 ros::Publisher vcu_ping_pub;
@@ -78,13 +77,13 @@ void copyPathFile(std::string original);
 void gpsCallback(const geometry_msgs::TransformStamped::ConstPtr& msg);
 void guardCallback(const ackermann_msgs::AckermannDrive::ConstPtr& msg);
 void initPrepartion(ros::NodeHandle* node);
-void interfaceCallback(const std_msgs::Float64::ConstPtr& msg);
 void obstacleCallback(const std_msgs::Bool::ConstPtr& msg);
 void orbslamCallback(const nav_msgs::Odometry::ConstPtr& msg);
 void purePursuitCallback(const ackermann_msgs::AckermannDrive::ConstPtr& msg);
 void rovioCallback(const nav_msgs::Odometry::ConstPtr& msg);
 void shortenPathFile(std::string original, std::string path_length);
 void stateCallback(const arc_msgs::State::ConstPtr& msg);
+void vcuCallback(const std_msgs::Float64::ConstPtr& msg);
 void velodyneCallback(const sensor_msgs::PointCloud2::ConstPtr& msg);
 void viCallback(const sensor_msgs::Image::ConstPtr& msg);
 
@@ -117,10 +116,9 @@ int main(int argc, char** argv){
 	while(!ALL_INITIALISED){
 		//Ping VCU.
 		if(!READY_NI_CLIENT){
-			std_msgs::Float64 ping_msg;
-			if(INIT_MODE) ping_msg.data = 1;
-			if(!INIT_MODE) ping_msg.data = 0;
-			vcu_ping_pub.publish(ping_msg);
+			std_msgs::Float64 vcu_ping_msg;
+			vcu_ping_msg.data = 0.0;
+			vcu_ping_pub.publish(vcu_ping_msg);
 			std_msgs::Float64 vcu_mode_msg;
 			vcu_mode_msg.data = 1.0;
 			if(VCU_PARAMETER_MODE == "street") vcu_mode_msg.data = 1.0;
@@ -181,29 +179,27 @@ void initPrepartion(ros::NodeHandle* node){
 	node->getParam("/general/QUEUE_LENGTH", QUEUE_LENGTH);
 	node->getParam("/general/VCU_PARAMETER_MODE", VCU_PARAMETER_MODE);
 	node->getParam("/topic/GPS_POSITION", GPS_TOPIC);
-	node->getParam("/topic/STELLGROESSEN_SAFE", GUARD_TOPIC);
-	node->getParam("/topic/READY_FOR_DRIVING", READY_FOR_DRIVING_TOPIC);
-	node->getParam("/topic/READY_FOR_LAUNCHING", READY_FOR_LAUNCHING_TOPIC);
 	node->getParam("/topic/LASER_STOP", OBSTACLE_DETECTION_TOPIC);	
 	node->getParam("/topic/ORB_SLAM_ODOMETRY", ORB_SLAM_TOPIC);
-	node->getParam("/topic/STELLGROESSEN", PURE_PURSUIT_TOPIC);
 	node->getParam("/topic/READY_FOR_DRIVING", READY_FOR_DRIVING_TOPIC);
 	node->getParam("/topic/READY_FOR_LAUNCHING", READY_FOR_LAUNCHING_TOPIC);
 	node->getParam("/topic/ROVIO_ODOMETRY", ROVIO_TOPIC);
 	node->getParam("/topic/STATE", STATE_ESTIMATION_TOPIC);
-	node->getParam("/topic/VCU_PING", VCU_PING_TOPIC);
+	node->getParam("/topic/STELLGROESSEN", PURE_PURSUIT_TOPIC);
+	node->getParam("/topic/STELLGROESSEN_SAFE", GUARD_TOPIC);
+	node->getParam("/topic/VCU_WORKING_INTERFACE", VCU_WORKING_INTERFACE_TOPIC);
 	node->getParam("/topic/VELODYNE_POINTCLOUD", VELODYNE_TOPIC);
 	node->getParam("/topic/VI_CAMERA_LEFT", VI_TOPIC);
 	//Setting publisher and subcriber.
 	ready_driving_pub = node->advertise<std_msgs::Bool>(READY_FOR_DRIVING_TOPIC, QUEUE_LENGTH);
 	ready_launching_pub = node->advertise<std_msgs::Bool>(READY_FOR_LAUNCHING_TOPIC, QUEUE_LENGTH);
 	vcu_mode_pub = node->advertise<std_msgs::Float64>(VCU_PARAMETER_MODE_TOPIC, QUEUE_LENGTH);
-	vcu_ping_pub = node->advertise<std_msgs::Float64>(VCU_PING_TOPIC, QUEUE_LENGTH);
+	vcu_ping_pub = node->advertise<std_msgs::Float64>(VCU_WORKING_INTERFACE_TOPIC, QUEUE_LENGTH);
 	if(USE_CONTROL_STEERING) pure_pursuit_sub = node->subscribe(PURE_PURSUIT_TOPIC, QUEUE_LENGTH, purePursuitCallback);
 	if(USE_CONTROL_VELOCITY) {} //TODO: Velocity control node adden.
 	if(USE_GPS) gps_sub = node->subscribe(GPS_TOPIC, QUEUE_LENGTH, gpsCallback);
 	if(USE_GUARD) guard_sub = node->subscribe(GUARD_TOPIC, QUEUE_LENGTH, guardCallback);
-	if(USE_NI_CLIENT) interface_sub = node->subscribe(VCU_PING_TOPIC, QUEUE_LENGTH, interfaceCallback);
+	if(USE_NI_CLIENT) vcu_sub = node->subscribe(VCU_WORKING_INTERFACE_TOPIC, QUEUE_LENGTH, vcuCallback);
 	if(USE_OBSTACLE_DETECTION) obstacle_detection_sub = node->subscribe(OBSTACLE_DETECTION_TOPIC, QUEUE_LENGTH, obstacleCallback);
 	if(USE_STATE_ESTIMATION){
 		state_estimation_sub = node->subscribe(STATE_ESTIMATION_TOPIC, QUEUE_LENGTH, stateCallback);
@@ -214,8 +210,8 @@ void initPrepartion(ros::NodeHandle* node){
 	if(USE_VI) vi_sub = node->subscribe(VI_TOPIC, QUEUE_LENGTH, viCallback);
 }
 
-void interfaceCallback(const std_msgs::Float64::ConstPtr& msg){
-	if(msg->data == 11){
+void vcuCallback(const std_msgs::Float64::ConstPtr& msg){
+	if(msg->data == 1.0){
 		READY_NI_CLIENT = true;
 		std::cout << "PREPARATION: Interface initialised" << std::endl;
 	}

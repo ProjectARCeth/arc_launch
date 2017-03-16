@@ -51,7 +51,9 @@ topic/TRACKING_ERROR: 'tracking_error' #Difference between current and teach pos
 topic/TRACKING_ERROR_VELOCITY: 'tracking_error_vel' #Difference between current and teach velocity, std_msgs::Float64.
 topic/VELODYNE_POINTCLOUD: 'velodyne_points' #Laser point cloud, sensor_msgs::PointCloud2.
 topic/VCU_PARAMETER_MODE: 'vcu_parameter_mode' #Velocity control parameter (street, lift, ...), std_msgs::Float64.
-topic/VCU_PING: 'vcu_ping' #Pinging VCU until started, std_msgs::Float64.
+topic/VCU_LAUNCHING_COMMAND: 'vcu_controller_launching' #Launching VCU command, std_msgs::Bool.
+topic/VCU_CONTROLLER_STATE: 'vcu_controller_state' #State check of controller state on VCU, std_msgs;;Float64.
+topic/VCU_WORKING_INTERFACE: 'vcu_working_interface' #Working ROS-VCU interface, std_msgs::Float64.
 topic/VI_CAMERA_LEFT: 'cam0/image_raw' #Raw VI camera data, senor_msgs::Image.
 topic/VI_CAMERA_RIGHT: 'cam1/image_raw' #Raw VI camera data, senor_msgs::Image.
 topic/WHEEL_FRONT_LEFT: 'wheel_front_left' #Wheel sensor callback, std_msgs::Float64.

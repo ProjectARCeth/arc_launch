@@ -20,8 +20,9 @@
   <arg name="OBSTACLE_DETECTION" value="false" /> 
   <arg name="GUARD" value="false" />
   <!-- Visualisation -->
-  <arg name="GUI" value="false" />
+  <arg name="GUI" value="true" />
   <arg name="RVIZ" value="false" />
+  <arg name="ORB_VISUALISATION" value="false" />
   <!-- Rosbag -->
   <arg name="ROSBAG_PLAY" value="false" /> 
   <arg name="ROSBAG_PLAY_PATH" value="/home/sele/Schreibtisch/Obstacles_Hoengg.bag" />
@@ -88,8 +89,8 @@
 
   <!-- starting state estimation node -->
   <node name="state_estimation" pkg="arc_state_estimation" type="state_estimation" output="screen" args="$(arg Name) $(arg Mode)" if="$(arg STATE_ESTIMATION)"/> 
-  <!-- starting ORB_SLAM (VOC-PATH CFG-PATH USE-VIEWER)--> 
-  <node pkg="orb_slam2" type="stereo" name="stereo" args="$(find orb_slam2)/../../../Vocabulary/ORBvoc.txt   $(find orb_slam2)/../../Stereo/ARC.yaml true $(arg Mode)" output="screen" if="$(arg STATE_ESTIMATION)" >
+  <!-- starting ORB_SLAM (VOC-PATH CFG-PATH USE-VIEWER Reuse-Map Map-Name)--> 
+  <node pkg="orb_slam2" type="stereo" name="stereo" args="$(find orb_slam2)/../../../Vocabulary/ORBvoc.txt   $(find orb_slam2)/../../Stereo/ARC.yaml $(arg ORB_VISUALISATION) $(arg Mode) $(arg Name) $(arg Name)" output="screen" if="$(arg STATE_ESTIMATION)" >
   	<remap from="/camera/left/image_raw" to="/cam0/image_raw"/>
   	<remap from="/camera/right/image_raw" to="/cam1/image_raw"/>
   </node>
