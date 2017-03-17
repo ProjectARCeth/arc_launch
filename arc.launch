@@ -11,8 +11,7 @@
   <!-- Localisation and state estimation -->
   <arg name="STATE_ESTIMATION" value="true" />
   <!-- Steering and velocity controlling -->
-  <arg name="CONTROLLING_STEERING" value="false" />
-  <arg name="CONTROLLING_VELOCITY" value="false" />
+  <arg name="CONTROLLING" value="true" />
   <!-- External communication -->
   <arg name="NI_CLIENT" value="false" />
   <arg name="PS_CONTROLLER" value="false" />
@@ -25,7 +24,7 @@
   <arg name="ORB_VISUALISATION" value="false" />
   <!-- Rosbag -->
   <arg name="ROSBAG_PLAY" value="false" /> 
-  <arg name="ROSBAG_PLAY_PATH" value="/home/sele/Schreibtisch/Obstacles_Hoengg.bag" />
+  <arg name="ROSBAG_PLAY_PATH" value="/home/sele/Schreibtisch/Hoengg_langsame_Runde.bag" />
  
   <!-- Launch parameters: Name = name of testing, Mode = teach(false), repeat(true), Path_Length =  length of drivable path from beginning -->
   <arg name="Name" default="/home/sele/Paths/test" />
@@ -33,7 +32,7 @@
   <arg name="Path_Length" default="full" /> 
 
  <!-- Preparation -->
- <node name="preparation" pkg="arc_launch" type="preparation" output="screen" args="$(arg Name) $(arg Mode) $(arg Path_Length) $(arg GPS) $(arg VI) $(arg VELODYNE) $(arg NI_CLIENT) $(arg STATE_ESTIMATION) $(arg OBSTACLE_DETECTION) $(arg GUARD) $(arg CONTROLLING_STEERING) $(arg CONTROLLING_VELOCITY)" />
+ <node name="preparation" pkg="arc_launch" type="preparation" output="screen" args="$(arg Name) $(arg Mode) $(arg Path_Length) $(arg GPS) $(arg VI) $(arg VELODYNE) $(arg NI_CLIENT) $(arg STATE_ESTIMATION) $(arg OBSTACLE_DETECTION) $(arg GUARD) $(arg CONTROLLING)" />
 
   <!-- GPS -->
   <node name="gps" pkg="ublox_gps" type="ublox_gps" output="screen" if="$(arg GPS)">
@@ -102,12 +101,18 @@
   </node>
 
   <!-- Controlling and Safety: Only teach software -->
-  <!--starting obstacle-detection -->
-  <node name="obstacle_detection_node" pkg="arc_obstacle_detection" type="obstacle_detection_node" output="screen" if="$(arg OBSTACLE_DETECTION)"/>
-	
+  <group if="$(arg Mode)">
+  	<!--starting obstacle-detection -->
+  	<node name="obstacle_detection_node" pkg="arc_obstacle_detection" type="obstacle_detection_node" output="screen"
+	 if="$(arg OBSTACLE_DETECTION)"/>
+ 	 <node name="grid_analyser_node" pkg="grid_analyser" type="grid_analyser_node" output="screen" if="$(arg OBSTACLE_DETECTION)" />
+ 	 <!--starting Controlling -->
+  	<node name="regler_node" pkg="pure_pursuit_controller" type="regler_node" output="screen" if="$(arg CONTROLLING)" />
+  </group>
+
   <!-- starting GUI -->
   <node name="arc_gui" pkg="arc_viewer" type="arc_gui" output="screen" args="$(arg Mode)" if="$(arg GUI)" />	
-  <!-- starting Controller -->
+  <!-- starting PS-Controller -->
   <node pkg="joy" type="joy_node" name="ps3_joy" output="screen" if="$(arg PS_CONTROLLER)" >
     <param name="dev" type="string" value="/dev/input/js0" />
     <param name="deadzone" value="0.12" />
@@ -120,13 +125,12 @@
  <node name="udp_client" type="udp_client" pkg="arc_interface" output="screen" if="$(arg NI_CLIENT)" />
 
   <!-- starting rviz visualisation -->
-  <node pkg="rviz" name="myrviz" type="rviz" if="$(arg RVIZ)"/>
+  <node pkg="rviz" name="rviz" type="rviz" if="$(arg RVIZ)"/>
   <!-- tf_tree transformation -->
   <node pkg="tf" type="static_transform_publisher" name="rovio_to_velodyne_broadcaster" args="0.0 0.9 -1.0 0 0 0 0 vi velodyne 100" if="$(arg RVIZ)"/> 
   <node pkg="tf" type="static_transform_publisher" name="velodyne_to_rear_axle_broadcaster" args="-0.5786 0.0 -1.0705 0.0 0.0 0.0 1.0 velodyne rear_axle 100" if="$(arg RVIZ)" /> 
   <node pkg="tf" type="static_transform_publisher" name="path" args="0.0 0.0 0.0 0.0 0.0 0.0 1.0 odom path 100" if="$(arg RVIZ)"/> 
   <node pkg="tf" type="static_transform_publisher" name="teach_path" args="0.0 0.0 0.0 0.0 0.0 0.0 1.0 odom teach_path 100" if="$(arg RVIZ)"/>
-
   <!-- Recording and playing rosbag -->
   <node pkg="rosbag" type="play" output="screen" name="bag" args="$(arg ROSBAG_PLAY_PATH)" if="$(arg ROSBAG_PLAY)" />
 

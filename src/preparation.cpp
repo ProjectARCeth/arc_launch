@@ -3,6 +3,7 @@
 #include <iostream>
 #include <ros/ros.h>
 #include <sstream>
+#include <stdlib.h>
 #include <string>
 
 #include <arc_msgs/State.h>
@@ -34,8 +35,7 @@ std::string VCU_PARAMETER_MODE_TOPIC;
 std::string VCU_WORKING_INTERFACE_TOPIC;
 std::string VI_TOPIC;
 //Sensor or node used.
-bool USE_CONTROL_STEERING = true;
-bool USE_CONTROL_VELOCITY = true;
+bool USE_CONTROLLING;
 bool USE_GPS = true;
 bool USE_NI_CLIENT = true;
 bool USE_OBSTACLE_DETECTION = true;
@@ -45,8 +45,7 @@ bool USE_VELODYNE = true;
 bool USE_VI = true;
 //Sensor or node initialised.
 bool ALL_INITIALISED = false;
-bool READY_CONTROL_STEERING = false;
-bool READY_CONTROL_VELOCITY = false;
+bool READY_CONTROL = false;
 bool READY_GPS = false;
 bool READY_GUARD = false;
 bool READY_NI_CLIENT = false;
@@ -102,8 +101,7 @@ int main(int argc, char** argv){
 	if(strlen(*(argv + 8)) == 5) USE_STATE_ESTIMATION = false;
 	if(strlen(*(argv + 9)) == 5) USE_OBSTACLE_DETECTION = false;
 	if(strlen(*(argv + 10)) == 5) USE_GUARD = false;
-	if(strlen(*(argv + 11)) == 5) USE_CONTROL_STEERING = false;
-	if(strlen(*(argv + 12)) == 5) USE_CONTROL_VELOCITY = false;
+	if(strlen(*(argv + 11)) == 5) USE_CONTROLLING = false;
 	//Initialise.
 	initPrepartion(&node);
 	//Edit path file and starting pure pursuit.
@@ -138,12 +136,11 @@ int main(int argc, char** argv){
 }
 
 void checkingAllInitialised(){
-	if(USE_CONTROL_STEERING && !READY_CONTROL_STEERING) ALL_INITIALISED = false;
-	else if(USE_CONTROL_VELOCITY && !READY_CONTROL_VELOCITY) ALL_INITIALISED = false;
+	if(USE_CONTROLLING && !READY_CONTROL && INIT_MODE) ALL_INITIALISED = false;
 	else if(USE_GPS && !READY_GPS) ALL_INITIALISED = false;
-	else if(USE_GUARD && !READY_GUARD) ALL_INITIALISED = false;
+	else if(USE_GUARD && !READY_GUARD && INIT_MODE) ALL_INITIALISED = false;
 	else if(USE_NI_CLIENT && !READY_NI_CLIENT) ALL_INITIALISED = false;
-	else if(USE_OBSTACLE_DETECTION && !READY_OBSTACLE_DETECTION) ALL_INITIALISED = false;
+	else if(USE_OBSTACLE_DETECTION && !READY_OBSTACLE_DETECTION && INIT_MODE) ALL_INITIALISED = false;
 	else if(USE_STATE_ESTIMATION && !READY_STATE_ESTIMATION) ALL_INITIALISED = false;
 	else if(USE_STATE_ESTIMATION && !READY_ORBSLAM) ALL_INITIALISED = false;
 	else if(USE_STATE_ESTIMATION && !READY_ROVIO) ALL_INITIALISED = false;
@@ -171,7 +168,6 @@ void gpsCallback(const geometry_msgs::TransformStamped::ConstPtr& msg){
 void guardCallback(const ackermann_msgs::AckermannDrive::ConstPtr& msg){
 	if(!READY_GUARD) std::cout << "PREPARATION: Guard initialised" << std::endl;
 	READY_GUARD = true;
-	
 }
 
 void initPrepartion(ros::NodeHandle* node){
@@ -195,8 +191,7 @@ void initPrepartion(ros::NodeHandle* node){
 	ready_launching_pub = node->advertise<std_msgs::Bool>(READY_FOR_LAUNCHING_TOPIC, QUEUE_LENGTH);
 	vcu_mode_pub = node->advertise<std_msgs::Float64>(VCU_PARAMETER_MODE_TOPIC, QUEUE_LENGTH);
 	vcu_ping_pub = node->advertise<std_msgs::Float64>(VCU_WORKING_INTERFACE_TOPIC, QUEUE_LENGTH);
-	if(USE_CONTROL_STEERING) pure_pursuit_sub = node->subscribe(PURE_PURSUIT_TOPIC, QUEUE_LENGTH, purePursuitCallback);
-	if(USE_CONTROL_VELOCITY) {} //TODO: Velocity control node adden.
+	if(USE_CONTROLLING) pure_pursuit_sub = node->subscribe(PURE_PURSUIT_TOPIC, QUEUE_LENGTH, purePursuitCallback);
 	if(USE_GPS) gps_sub = node->subscribe(GPS_TOPIC, QUEUE_LENGTH, gpsCallback);
 	if(USE_GUARD) guard_sub = node->subscribe(GUARD_TOPIC, QUEUE_LENGTH, guardCallback);
 	if(USE_NI_CLIENT) vcu_sub = node->subscribe(VCU_WORKING_INTERFACE_TOPIC, QUEUE_LENGTH, vcuCallback);
@@ -212,8 +207,8 @@ void initPrepartion(ros::NodeHandle* node){
 
 void vcuCallback(const std_msgs::Float64::ConstPtr& msg){
 	if(msg->data == 1.0){
+		if(!READY_NI_CLIENT) std::cout << "PREPARATION: Interface initialised" << std::endl;
 		READY_NI_CLIENT = true;
-		std::cout << "PREPARATION: Interface initialised" << std::endl;
 	}
 }
 
@@ -228,8 +223,8 @@ void orbslamCallback(const nav_msgs::Odometry::ConstPtr& msg){
 }
 
 void purePursuitCallback(const ackermann_msgs::AckermannDrive::ConstPtr& msg){
-	if(!READY_CONTROL_STEERING) std::cout << "PREPARATION: Pure Pursuit initialised" << std::endl; 
-	READY_CONTROL_STEERING = true;
+	if(!READY_CONTROL) std::cout << "PREPARATION: Pure Pursuit initialised" << std::endl; 
+	READY_CONTROL = true;
 }
 
 void rovioCallback(const nav_msgs::Odometry::ConstPtr& msg){
