@@ -13,7 +13,7 @@
   <!-- Steering and velocity controlling -->
   <arg name="CONTROLLING" value="true" />
   <!-- External communication -->
-  <arg name="NI_CLIENT" value="false" />
+  <arg name="NI_CLIENT" value="true" />
   <arg name="PS_CONTROLLER" value="false" />
   <!-- Safety -->
   <arg name="OBSTACLE_DETECTION" value="false" /> 
