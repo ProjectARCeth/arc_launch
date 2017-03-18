@@ -67,7 +67,7 @@ ros::Subscriber state_estimation_sub;
 ros::Subscriber velodyne_sub;
 ros::Subscriber vcu_sub;
 ros::Subscriber vi_sub;
-ros::Subscriber stellgroessen_reset_pub;
+ros::Publisher stellgroessen_reset_pub;
 ros::Publisher ready_driving_pub;
 ros::Publisher ready_launching_pub;
 ros::Publisher vcu_mode_pub;
@@ -115,7 +115,7 @@ int main(int argc, char** argv){
 	//Reset steering and velocity (ss:10).
 	ackermann_msgs::AckermannDrive reset_msg;
 	reset_msg.steering_angle = -900*180/M_PI;
-	reset_msg.velocity = 0.0;
+	reset_msg.speed = 0.0;
 	stellgroessen_reset_pub.publish(reset_msg);
 	//Checking nodes runnning and publishing ready topic.
 	while(!ALL_INITIALISED){
