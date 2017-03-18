@@ -30,6 +30,7 @@ std::string READY_FOR_DRIVING_TOPIC;
 std::string READY_FOR_LAUNCHING_TOPIC;
 std::string ROVIO_TOPIC;
 std::string STATE_ESTIMATION_TOPIC;
+std::string STELLGROESSEN_TOPIC;
 std::string VELODYNE_TOPIC;
 std::string VCU_PARAMETER_MODE_TOPIC;
 std::string VCU_WORKING_INTERFACE_TOPIC;
@@ -66,10 +67,11 @@ ros::Subscriber state_estimation_sub;
 ros::Subscriber velodyne_sub;
 ros::Subscriber vcu_sub;
 ros::Subscriber vi_sub;
-ros::Publisher vcu_mode_pub;
-ros::Publisher vcu_ping_pub;
+ros::Subscriber stellgroessen_reset_pub;
 ros::Publisher ready_driving_pub;
 ros::Publisher ready_launching_pub;
+ros::Publisher vcu_mode_pub;
+ros::Publisher vcu_ping_pub;
 //Declaration of functions.
 void checkingAllInitialised();
 void copyPathFile(std::string original);
@@ -110,6 +112,11 @@ int main(int argc, char** argv){
 	std_msgs::Bool ready_for_launching_msg;
 	ready_for_launching_msg.data = true;
 	ready_launching_pub.publish(ready_for_launching_msg);
+	//Reset steering and velocity (ss:10).
+	ackermann_msgs::AckermannDrive reset_msg;
+	reset_msg.steering_angle = -900*180/M_PI;
+	reset_msg.velocity = 0.0;
+	stellgroessen_reset_pub.publish(reset_msg);
 	//Checking nodes runnning and publishing ready topic.
 	while(!ALL_INITIALISED){
 		//Ping VCU.
@@ -122,6 +129,9 @@ int main(int argc, char** argv){
 			if(VCU_PARAMETER_MODE == "street") vcu_mode_msg.data = 1.0;
 			if(VCU_PARAMETER_MODE == "lift") vcu_mode_msg.data = 0.0;
 			vcu_mode_pub.publish(vcu_mode_msg);
+			//Controlling loop.
+			ros::Rate loop_rate(10);
+			loop_rate.sleep();
 		}
 		//Checking if nodes running.
 		checkingAllInitialised();
@@ -183,12 +193,14 @@ void initPrepartion(ros::NodeHandle* node){
 	node->getParam("/topic/STATE", STATE_ESTIMATION_TOPIC);
 	node->getParam("/topic/STELLGROESSEN", PURE_PURSUIT_TOPIC);
 	node->getParam("/topic/STELLGROESSEN_SAFE", GUARD_TOPIC);
+	node->getParam("/topic/STELLGROESSEN_SAFE", STELLGROESSEN_TOPIC);
 	node->getParam("/topic/VCU_WORKING_INTERFACE", VCU_WORKING_INTERFACE_TOPIC);
 	node->getParam("/topic/VELODYNE_POINTCLOUD", VELODYNE_TOPIC);
 	node->getParam("/topic/VI_CAMERA_LEFT", VI_TOPIC);
 	//Setting publisher and subcriber.
 	ready_driving_pub = node->advertise<std_msgs::Bool>(READY_FOR_DRIVING_TOPIC, QUEUE_LENGTH);
 	ready_launching_pub = node->advertise<std_msgs::Bool>(READY_FOR_LAUNCHING_TOPIC, QUEUE_LENGTH);
+	stellgroessen_reset_pub = node->advertise<ackermann_msgs::AckermannDrive>(STELLGROESSEN_TOPIC, QUEUE_LENGTH);
 	vcu_mode_pub = node->advertise<std_msgs::Float64>(VCU_PARAMETER_MODE_TOPIC, QUEUE_LENGTH);
 	vcu_ping_pub = node->advertise<std_msgs::Float64>(VCU_WORKING_INTERFACE_TOPIC, QUEUE_LENGTH);
 	if(USE_CONTROLLING) pure_pursuit_sub = node->subscribe(PURE_PURSUIT_TOPIC, QUEUE_LENGTH, purePursuitCallback);

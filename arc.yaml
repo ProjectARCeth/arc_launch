@@ -8,7 +8,7 @@ erod/WIDTH_WHEEL_AXIS: 1.5 #[m], distance wheel joints.
 erod/MAX_ACCELERATING_VOLTAGE: 1.0 #[V], max. voltage of throttle.
 erod/MAX_LATERAL_ACCELERATION: 8 #[m/s²], max. lateral acceleration.
 erod/MAX_BRAKING_VOLTAGE: 12.0 #[V], max. voltage of braking system.
-erod/MAX_STEERING_ANGLE: 300 #[rad] +-° steering wheel impact.
+erod/MAX_STEERING_ANGLE: 30 #[rad] +-° steering wheel impact.
 erod/MAX_VELOCITY: 17.5 #[m/s], ~70 km/h.
 erod/MU_HAFT: 0.8 # friction parameter.
 erod/WHEEL_DIAMETER: 0.5 #[m]. 

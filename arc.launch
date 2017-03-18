@@ -21,7 +21,7 @@
   <!-- Visualisation -->
   <arg name="GUI" value="true" />
   <arg name="RVIZ" value="false" />
-  <arg name="ORB_VISUALISATION" value="false" />
+  <arg name="ORB_VISUALISATION" value="true" />
   <!-- Rosbag -->
   <arg name="ROSBAG_PLAY" value="false" /> 
   <arg name="ROSBAG_PLAY_PATH" value="/home/sele/Schreibtisch/Hoengg_langsame_Runde.bag" />
