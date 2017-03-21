@@ -5,22 +5,21 @@
   <rosparam command="load" file="$(find arc_launch)/arc.yaml" />
 
   <!-- Sensors -->
-  <arg name="GPS" value="false" />
-  <arg name="VI" value="false" /> 
-  <arg name="VELODYNE" value="false" />
+  <arg name="GPS" value="true" />
+  <arg name="VI" value="true" /> 
+  <arg name="VELODYNE" value="true" />
   <!-- Localisation and state estimation -->
   <arg name="STATE_ESTIMATION" value="true" />
   <!-- Steering and velocity controlling -->
-  <arg name="CONTROLLING" value="false" />
+  <arg name="CONTROLLING" value="true" />
   <!-- External communication -->
-  <arg name="NI_CLIENT" value="false" />
+  <arg name="NI_CLIENT" value="true" />
   <arg name="PS_CONTROLLER" value="false" />
   <!-- Safety -->
   <arg name="OBSTACLE_DETECTION" value="false" /> 
-  <arg name="GUARD" value="false" />
+  <arg name="GUARD" value="true" />
   <!-- Visualisation -->
   <arg name="GUI" value="true" />
-  <arg name="RVIZ" value="false" />
   <arg name="ORB_VISUALISATION" value="false" />
   <!-- Rosbag -->
   <arg name="ROSBAG_PLAY" value="false" /> 
@@ -102,6 +101,8 @@
 
   <!-- Controlling and Safety: Only teach software -->
   <group if="$(arg Mode)">
+        <!--starting Guard -->
+	<node name="high-level-guard" pkg="guard" type="high-level-guard" output="screen" args="$(arg GUARD)" /> 
   	<!--starting obstacle-detection -->
   	<node name="obstacle_detection_node" pkg="arc_obstacle_detection" type="obstacle_detection_node" output="screen"
 	 if="$(arg OBSTACLE_DETECTION)"/>
@@ -124,13 +125,6 @@
  <!-- starting NI client -->
  <node name="udp_client" type="udp_client" pkg="arc_interface" output="screen" if="$(arg NI_CLIENT)" />
 
-  <!-- starting rviz visualisation -->
-  <node pkg="rviz" name="rviz" type="rviz" if="$(arg RVIZ)"/>
-  <!-- tf_tree transformation -->
-  <node pkg="tf" type="static_transform_publisher" name="rovio_to_velodyne_broadcaster" args="0.0 0.9 -1.0 0 0 0 0 vi velodyne 100" if="$(arg RVIZ)"/> 
-  <node pkg="tf" type="static_transform_publisher" name="velodyne_to_rear_axle_broadcaster" args="-0.5786 0.0 -1.0705 0.0 0.0 0.0 1.0 velodyne rear_axle 100" if="$(arg RVIZ)" /> 
-  <node pkg="tf" type="static_transform_publisher" name="path" args="0.0 0.0 0.0 0.0 0.0 0.0 1.0 odom path 100" if="$(arg RVIZ)"/> 
-  <node pkg="tf" type="static_transform_publisher" name="teach_path" args="0.0 0.0 0.0 0.0 0.0 0.0 1.0 odom teach_path 100" if="$(arg RVIZ)"/>
   <!-- Recording and playing rosbag -->
   <node pkg="rosbag" type="play" output="screen" name="bag" args="$(arg ROSBAG_PLAY_PATH)" if="$(arg ROSBAG_PLAY)" />
 

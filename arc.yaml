@@ -29,6 +29,7 @@ general/VCU_PARAMETER_MODE: 'lift' #street or lift VCU - velocity control parame
 topic/CAR_MODEL_VELOCITY: 'car_model_velocity' #Linear velocity by velocity model, geometry_msgs::TwistStamped.
 topic/DANGER_GRID: 'danger_grid' #Dangerous area in front of car, nav_msgs::GridMap.
 topic/GPS_POSITION: 'gps/fix_transform' #Relative GPS position, geometry_msgs::TransformStamped.
+topic/GUI_STOP: 'gui_stop' #Stop executed by GUI Button, std_msgs::Bool.
 topic/LASER_STOP: 'stop_laser' #Grid map stop bool, std_msgs::Bool.
 topic/MODE: 'mode' #Teach(0) or Repeat(1), std_msgs::Bool.
 topic/NAVIGATION_INFO: 'navigation_info' #Information about pure pursuit, std_msgs::Float32MultiArray.
@@ -46,7 +47,6 @@ topic/STATE: 'state' #State (position, velocity, path_array_index, stop), arc_ms
 topic/STATE_STEERING_ANGLE: 'state_steering_angle' #Current steering angle, std_msgs::Float64.
 topic/STELLGROESSEN: 'stellgroessen' #Actuator commands (velocity and steering angle), ackermann_msgs::AckermannDrive.
 topic/STELLGROESSEN_SAFE: 'stellgroessen_safe' #Act. comm. checked by Guarding system->VCU, ackermann_msgs::AckermannDrive.
-topic/STOP_NI: 'stop_ni' #Emergency stop by VCU, std_msgs::Bool.
 topic/TEACH_PATH: 'path_teach' #Teach path, nav_msgs::Path.
 topic/TRACKING_ERROR: 'tracking_error' #Difference between current and teach position, std_msgs::Float64.
 topic/TRACKING_ERROR_VELOCITY: 'tracking_error_vel' #Difference between current and teach velocity, std_msgs::Float64.
@@ -57,8 +57,6 @@ topic/VCU_CONTROLLER_STATE: 'vcu_controller_state' #State check of controller st
 topic/VCU_WORKING_INTERFACE: 'vcu_working_interface' #Working ROS-VCU interface, std_msgs::Float64.
 topic/VI_CAMERA_LEFT: 'cam0/image_raw' #Raw VI camera data, senor_msgs::Image.
 topic/VI_CAMERA_RIGHT: 'cam1/image_raw' #Raw VI camera data, senor_msgs::Image.
-topic/WHEEL_FRONT_LEFT: 'wheel_front_left' #Wheel sensor callback, std_msgs::Float64.
-topic/WHEEL_FRONT_RIGHT: 'wheel_front_right' #Wheel sensor callback, std_msgs::Float64.
 topic/WHEEL_REAR_LEFT: 'wheel_rear_left' #Wheel sensor callback, std_msgs::Float64.
 topic/WHEEL_REAR_RIGHT: 'wheel_rear_right' #Wheel sensor callback, std_msgs::Float64.
 
