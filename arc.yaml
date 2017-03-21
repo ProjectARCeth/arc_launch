@@ -23,7 +23,7 @@ sensor/CAM_INIT_QUAT_W: 0.00033 #Initial orientation measurement of cam.
 general/MY_PORT: 8010 #My computer port.
 general/NI_PORT: 8001 #National Instrument Port.
 general/QUEUE_LENGTH: 1  #proportional to update frequency.
-general/VCU_PARAMETER_MODE: 'lift' #street or lift VCU - velocity control parameter mode.
+general/VCU_PARAMETER_MODE: 'street' #street or lift VCU - velocity control parameter mode.
 
 #Topics.
 topic/CAR_MODEL_VELOCITY: 'car_model_velocity' #Linear velocity by velocity model, geometry_msgs::TwistStamped.

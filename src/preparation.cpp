@@ -124,6 +124,7 @@ int main(int argc, char** argv){
 	std_msgs::Int16MultiArray launching_info_msg;
 	launching_info_msg.data.clear();
 	for(int i=0;i<10;i++) launching_info_msg.data.push_back(0);
+	ros::Rate loop_rate(1);
 	//Checking nodes runnning and publishing ready topic.
 	while(!ALL_INITIALISED){
 		//Ping VCU.
@@ -152,9 +153,10 @@ int main(int argc, char** argv){
 		//Checking if nodes running.
 		checkingAllInitialised();
 		//Controlling loop.
-		ros::Rate loop_rate(10);
-		loop_rate.sleep();
+		
 		ros::spinOnce();
+		loop_rate.sleep();
+		
 	}
 	std_msgs::Bool ready_for_driving_msg;
 	ready_for_driving_msg.data = true;
