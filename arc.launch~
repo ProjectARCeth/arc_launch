@@ -11,9 +11,9 @@
   <!-- Localisation and state estimation -->
   <arg name="STATE_ESTIMATION" value="true" />
   <!-- Steering and velocity controlling -->
-  <arg name="CONTROLLING" value="true" />
+  <arg name="CONTROLLING" value="false" />
   <!-- External communication -->
-  <arg name="NI_CLIENT" value="true" />
+  <arg name="NI_CLIENT" value="false" />
   <arg name="PS_CONTROLLER" value="false" />
   <!-- Safety -->
   <arg name="OBSTACLE_DETECTION" value="false" /> 
@@ -24,7 +24,7 @@
   <arg name="ORB_VISUALISATION" value="false" />
   <!-- Rosbag -->
   <arg name="ROSBAG_PLAY" value="false" /> 
-  <arg name="ROSBAG_PLAY_PATH" value="/home/sele/Schreibtisch/Hoengg_langsame_Runde.bag" />
+  <arg name="ROSBAG_PLAY_PATH" value="/home/sele/Schreibtisch/Hoengg_Mittlere_Runde_mit_Wheel.bag" />
  
   <!-- Launch parameters: Name = name of testing, Mode = teach(false), repeat(true), Path_Length =  length of drivable path from beginning -->
   <arg name="Name" default="/home/sele/Paths/test" />
@@ -95,7 +95,7 @@
   </node>
   <!-- starting Rovio -->
   <node pkg="rovio" type="rovio_node" name="rovio" output="screen" if="$(arg STATE_ESTIMATION)">
-   <param name="filter_config" value="$(find rovio)/cfg/rovio_test.info"/>
+   <param name="filter_config" value="$(findrovio)/cfg/rovio_test.info"/>
    <param name="camera0_config" value="$(find rovio)/cfg/rovio_cam0.yaml"/>
    <param name="camera1_config" value="$(find rovio)/cfg/rovio_cam1.yaml"/>
   </node>
@@ -111,7 +111,7 @@
   </group>
 
   <!-- starting GUI -->
-  <node name="arc_gui" pkg="arc_viewer" type="arc_gui" output="screen" args="$(arg Mode)" if="$(arg GUI)" />	
+  <node name="arc_gui" pkg="arc_viewer" type="arc_gui" output="screen" args="$(arg Mode) $(arg GPS) $(arg VI) $(arg VELODYNE) $(arg NI_CLIENT) $(arg STATE_ESTIMATION) $(arg OBSTACLE_DETECTION) $(arg GUARD) $(arg CONTROLLING)" if="$(arg GUI)" />	
   <!-- starting PS-Controller -->
   <node pkg="joy" type="joy_node" name="ps3_joy" output="screen" if="$(arg PS_CONTROLLER)" >
     <param name="dev" type="string" value="/dev/input/js0" />

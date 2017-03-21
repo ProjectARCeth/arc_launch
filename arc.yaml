@@ -23,7 +23,7 @@ sensor/CAM_INIT_QUAT_W: 0.00033 #Initial orientation measurement of cam.
 general/MY_PORT: 8010 #My computer port.
 general/NI_PORT: 8001 #National Instrument Port.
 general/QUEUE_LENGTH: 1  #proportional to update frequency.
-general/VCU_PARAMETER_MODE: 'lift' #street or lift VCU - velocity control parameter mode.
+general/VCU_PARAMETER_MODE: 'street' #street or lift VCU - velocity control parameter mode.
 
 #Topics.
 topic/CAR_MODEL_VELOCITY: 'car_model_velocity' #Linear velocity by velocity model, geometry_msgs::TwistStamped.
@@ -31,15 +31,16 @@ topic/DANGER_GRID: 'danger_grid' #Dangerous area in front of car, nav_msgs::Grid
 topic/GPS_POSITION: 'gps/fix_transform' #Relative GPS position, geometry_msgs::TransformStamped.
 topic/LASER_STOP: 'stop_laser' #Grid map stop bool, std_msgs::Bool.
 topic/MODE: 'mode' #Teach(0) or Repeat(1), std_msgs::Bool.
+topic/NAVIGATION_INFO: 'navigation_info' #Information about pure pursuit, std_msgs::Float32MultiArray.
 topic/NOTSTOP: 'notstop' #Emergency stop command, std_msgs::Bool.
 topic/OBSTACLE_DISTANCE: 'distance_to_obstacle' #Distance to nearest obstacles, std_msgs::Float64.
 topic/OBSTACLE_MAP: 'obstacle_gridmap' #Gridmap with all obstacles, nav_msgs::GridMap.
 topic/ORB_SLAM_ODOMETRY: 'orb_slam2/odometry' #Odometry from RSLAM, nav_msgs::Odometry.
-topic/NAVIGATION_INFO: 'navigation_info' #Information about pure pursuit, std_msgs::Float32MultiArray.
 topic/PATH: 'path' #Current path, nav_msgs::Path.
 topic/READY_FOR_DRIVING: 'ready_for_driving' #Published after checking if all components are ready for driving, std_msgs::Bool.
 topic/READY_FOR_LAUNCHING: 'ready_for_launching' #Published after editing path files for pure pursuit, std_msgs::Bool.
 topic/ROVIO_ODOMETRY: 'rovio/odometry' #Odometry from rovio, nav_msgs::Odometry.
+topic/RUNNING_PROGRAMMES: 'running_programmes' #Information which programmes already booted, std_msgs::Int16MultiArray.
 topic/SHUTDOWN: 'shutdown' #Shutdown command, std_msgs::Bool.
 topic/STATE: 'state' #State (position, velocity, path_array_index, stop), arc_msgs::State.
 topic/STATE_STEERING_ANGLE: 'state_steering_angle' #Current steering angle, std_msgs::Float64.

@@ -14,6 +14,7 @@
 #include <sensor_msgs/Image.h>
 #include <std_msgs/Bool.h>
 #include <std_msgs/Float64.h>
+#include <std_msgs/Int16MultiArray.h>
 
 //Constants.
 bool INIT_MODE = true;
@@ -23,6 +24,7 @@ int QUEUE_LENGTH;
 std::string VCU_PARAMETER_MODE;
 std::string GPS_TOPIC;
 std::string GUARD_TOPIC;
+std::string LAUNCHING_INFO_TOPIC;
 std::string OBSTACLE_DETECTION_TOPIC;
 std::string ORB_SLAM_TOPIC;
 std::string PURE_PURSUIT_TOPIC; 
@@ -36,7 +38,7 @@ std::string VCU_PARAMETER_MODE_TOPIC;
 std::string VCU_WORKING_INTERFACE_TOPIC;
 std::string VI_TOPIC;
 //Sensor or node used.
-bool USE_CONTROLLING;
+bool USE_CONTROLLING = true;
 bool USE_GPS = true;
 bool USE_NI_CLIENT = true;
 bool USE_OBSTACLE_DETECTION = true;
@@ -67,9 +69,10 @@ ros::Subscriber state_estimation_sub;
 ros::Subscriber velodyne_sub;
 ros::Subscriber vcu_sub;
 ros::Subscriber vi_sub;
-ros::Publisher stellgroessen_reset_pub;
+ros::Publisher launching_info_pub;
 ros::Publisher ready_driving_pub;
 ros::Publisher ready_launching_pub;
+ros::Publisher stellgroessen_reset_pub;
 ros::Publisher vcu_mode_pub;
 ros::Publisher vcu_ping_pub;
 //Declaration of functions.
@@ -117,6 +120,11 @@ int main(int argc, char** argv){
 	reset_msg.steering_angle = -900*180/M_PI;
 	reset_msg.speed = 0.0;
 	stellgroessen_reset_pub.publish(reset_msg);
+	//Preparing gui information.
+	std_msgs::Int16MultiArray launching_info_msg;
+	launching_info_msg.data.clear();
+	for(int i=0;i<10;i++) launching_info_msg.data.push_back(0);
+	ros::Rate loop_rate(1);
 	//Checking nodes runnning and publishing ready topic.
 	while(!ALL_INITIALISED){
 		//Ping VCU.
@@ -129,13 +137,26 @@ int main(int argc, char** argv){
 			if(VCU_PARAMETER_MODE == "street") vcu_mode_msg.data = 1.0;
 			if(VCU_PARAMETER_MODE == "lift") vcu_mode_msg.data = 0.0;
 			vcu_mode_pub.publish(vcu_mode_msg);
-			//Controlling loop.
-			ros::Rate loop_rate(10);
-			loop_rate.sleep();
 		}
+		//Publishing launch information.
+		launching_info_msg.data[0] = READY_CONTROL;
+		launching_info_msg.data[1] = READY_GPS;
+		launching_info_msg.data[2] = READY_NI_CLIENT;
+		launching_info_msg.data[3] = READY_OBSTACLE_DETECTION;
+		launching_info_msg.data[4] = READY_GUARD;
+		launching_info_msg.data[5] = READY_ROVIO;
+		launching_info_msg.data[6] = READY_STATE_ESTIMATION;
+		launching_info_msg.data[7] = READY_ORBSLAM;
+		launching_info_msg.data[8] = READY_VELODYNE;
+		launching_info_msg.data[9] = READY_VI;
+		launching_info_pub.publish(launching_info_msg);
 		//Checking if nodes running.
 		checkingAllInitialised();
+		//Controlling loop.
+		
 		ros::spinOnce();
+		loop_rate.sleep();
+		
 	}
 	std_msgs::Bool ready_for_driving_msg;
 	ready_for_driving_msg.data = true;
@@ -190,6 +211,7 @@ void initPrepartion(ros::NodeHandle* node){
 	node->getParam("/topic/READY_FOR_DRIVING", READY_FOR_DRIVING_TOPIC);
 	node->getParam("/topic/READY_FOR_LAUNCHING", READY_FOR_LAUNCHING_TOPIC);
 	node->getParam("/topic/ROVIO_ODOMETRY", ROVIO_TOPIC);
+	node->getParam("/topic/RUNNING_PROGRAMMES", LAUNCHING_INFO_TOPIC);
 	node->getParam("/topic/STATE", STATE_ESTIMATION_TOPIC);
 	node->getParam("/topic/STELLGROESSEN", PURE_PURSUIT_TOPIC);
 	node->getParam("/topic/STELLGROESSEN_SAFE", GUARD_TOPIC);
@@ -198,6 +220,7 @@ void initPrepartion(ros::NodeHandle* node){
 	node->getParam("/topic/VELODYNE_POINTCLOUD", VELODYNE_TOPIC);
 	node->getParam("/topic/VI_CAMERA_LEFT", VI_TOPIC);
 	//Setting publisher and subcriber.
+	launching_info_pub = node->advertise<std_msgs::Int16MultiArray>(LAUNCHING_INFO_TOPIC, QUEUE_LENGTH);
 	ready_driving_pub = node->advertise<std_msgs::Bool>(READY_FOR_DRIVING_TOPIC, QUEUE_LENGTH);
 	ready_launching_pub = node->advertise<std_msgs::Bool>(READY_FOR_LAUNCHING_TOPIC, QUEUE_LENGTH);
 	stellgroessen_reset_pub = node->advertise<ackermann_msgs::AckermannDrive>(STELLGROESSEN_TOPIC, QUEUE_LENGTH);
