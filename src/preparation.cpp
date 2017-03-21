@@ -130,7 +130,9 @@ int main(int argc, char** argv){
 		//Ping VCU.
 		if(!READY_NI_CLIENT){
 			std_msgs::Float64 vcu_ping_msg;
-			vcu_ping_msg.data = 0.0;
+			//Ping VCU: Connection working, calibrate and activate autonomous steering.
+			if(INIT_MODE) vcu_ping_msg.data = 5.0;
+			else vcu_ping_msg.data = 0.0;
 			vcu_ping_pub.publish(vcu_ping_msg);
 			std_msgs::Float64 vcu_mode_msg;
 			vcu_mode_msg.data = 1.0;
