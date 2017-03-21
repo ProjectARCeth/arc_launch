@@ -21,16 +21,19 @@
   <!-- Visualisation -->
   <arg name="GUI" value="true" />
   <arg name="ORB_VISUALISATION" value="false" />
+  <arg name="RVIZ" value="false" />
+  <arg name="ORB_VISUALISATION" value="true" />
   <!-- Rosbag -->
   <arg name="ROSBAG_PLAY" value="false" /> 
   <arg name="ROSBAG_PLAY_PATH" value="/home/sele/Schreibtisch/Hoengg_Mittlere_Runde_mit_Wheel.bag" />
  
   <!-- Launch parameters: Name = name of testing, Mode = teach(false), repeat(true), Path_Length =  length of drivable path from beginning -->
-  <arg name="Name" default="/home/sele/Paths/test" />
-  <arg name="Mode" default="false" /> 
+  <arg name="Name" default="/home/arcsystem/paths/test" />
+  <arg name="Mode" default="true" /> 
   <arg name="Path_Length" default="full" /> 
 
  <!-- Preparation -->
+
  <node name="preparation" pkg="arc_launch" type="preparation" output="screen" args="$(arg Name) $(arg Mode) $(arg Path_Length) $(arg GPS) $(arg VI) $(arg VELODYNE) $(arg NI_CLIENT) $(arg STATE_ESTIMATION) $(arg OBSTACLE_DETECTION) $(arg GUARD) $(arg CONTROLLING)" />
 
   <!-- GPS -->
@@ -104,11 +107,10 @@
         <!--starting Guard -->
 	<node name="high-level-guard" pkg="guard" type="high-level-guard" output="screen" args="$(arg GUARD)" /> 
   	<!--starting obstacle-detection -->
-  	<node name="obstacle_detection_node" pkg="arc_obstacle_detection" type="obstacle_detection_node" output="screen"
-	 if="$(arg OBSTACLE_DETECTION)"/>
+  	<node name="obstacle_detection_node" pkg="arc_obstacle_detection" type="obstacle_detection_node" output="screen" if="$(arg OBSTACLE_DETECTION)"/>
  	 <node name="grid_analyser_node" pkg="grid_analyser" type="grid_analyser_node" output="screen" if="$(arg OBSTACLE_DETECTION)" />
  	 <!--starting Controlling -->
-  	<node name="regler_node" pkg="pure_pursuit_controller" type="regler_node" output="screen" if="$(arg CONTROLLING)" />
+  	<node name="regler_node" pkg="pure_pursuit_controller" type="regler_node" output="screen"  args="$(arg Name)" if="$(arg CONTROLLING)" />
   </group>
 
   <!-- starting GUI -->

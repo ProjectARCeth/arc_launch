@@ -20,12 +20,7 @@
   <arg name="GUARD" value="true" />
   <!-- Visualisation -->
   <arg name="GUI" value="true" />
-<<<<<<< HEAD
-  <arg name="ORB_VISUALISATION" value="false" />
-=======
-  <arg name="RVIZ" value="false" />
   <arg name="ORB_VISUALISATION" value="true" />
->>>>>>> 8fb15a0c7cd694d6b8fc373c99840508d8dbda17
   <!-- Rosbag -->
   <arg name="ROSBAG_PLAY" value="false" /> 
   <arg name="ROSBAG_PLAY_PATH" value="/home/sele/Schreibtisch/Hoengg_Mittlere_Runde_mit_Wheel.bag" />
