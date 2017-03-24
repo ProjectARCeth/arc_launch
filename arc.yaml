@@ -8,7 +8,7 @@ erod/WIDTH_WHEEL_AXIS: 1.5 #[m], distance wheel joints.
 erod/MAX_ACCELERATING_VOLTAGE: 1.0 #[V], max. voltage of throttle.
 erod/MAX_LATERAL_ACCELERATION: 8 #[m/s²], max. lateral acceleration.
 erod/MAX_BRAKING_VOLTAGE: 12.0 #[V], max. voltage of braking system.
-erod/MAX_STEERING_ANGLE: 30 #[rad] +-° steering wheel impact.
+erod/MAX_STEERING_ANGLE: 20 #[rad] +-° steering wheel impact.
 erod/MAX_VELOCITY: 17.5 #[m/s], ~70 km/h.
 erod/MU_HAFT: 0.8 # friction parameter.
 erod/WHEEL_DIAMETER: 0.5 #[m]. 
@@ -74,12 +74,12 @@ safety/MIN_PUBLISH_NOTSTOP_COUNT: 20
 #Control parameters.
 control/CURRENT_ARRAY_SEARCHING_WIDTH: 4.0  #[m]
 control/DISTANCE_INTERPOLATION: 3
-control/K1_LAD_LASER: 2.0
+control/K1_LAD_LASER: 1.0
 control/K2_LAD_LASER: 5.0
-control/K1_LAD_S: 0.5 #Control parameter.
-control/K2_LAD_S: 3
+control/K1_LAD_S: 1 #Control parameter.
+control/K2_LAD_S: 2
 control/K1_LAD_V: 0.5
 control/K2_LAD_V: 3
 control/SHUT_DOWN_TIME: 5
 control/SLOW_DOWN_DISTANCE: 10
-control/V_FREEDOM: 10
+control/V_FREEDOM: 1.5
