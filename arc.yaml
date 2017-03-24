@@ -83,3 +83,4 @@ control/K2_LAD_V: 3
 control/SHUT_DOWN_TIME: 5
 control/SLOW_DOWN_DISTANCE: 10
 control/V_FREEDOM: 10
+control/NUMBER_OF_EMERGENCY_CELLS: 5
