@@ -4,7 +4,7 @@
 
 Use following commands on the terminal before building the package:
 
-wstool merge
+wstool init
 
 wstool merge arc_launch/dependencies.rosinstall 
 
