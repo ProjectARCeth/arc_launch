@@ -10,7 +10,7 @@
 - git:
    local-name: arc_tools
    uri: https://github.com/ProjectARCeth/arc_tools
--git:
+- git:
    local-name: arc_interface
    uri: https://github.com/ProjectARCeth/arc_interface
 - git:
