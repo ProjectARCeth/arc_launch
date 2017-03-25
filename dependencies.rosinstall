@@ -10,7 +10,7 @@
 - git:
    local-name: arc_tools
    uri: https://github.com/ProjectARCeth/arc_tools
--git:
+- git:
    local-name: arc_interface
    uri: https://github.com/ProjectARCeth/arc_interface
 - git:
@@ -35,7 +35,7 @@
 - git:
    local-name: guard
    uri: https://github.com/ProjectARCeth/guard
-   version: moritz_try
+   version: simons_guard
 - git:
    local-name: rovio
    uri: https://github.com/ProjectARCeth/rovio
@@ -61,4 +61,4 @@
 - git:
    local-name: RSLAM
    uri: https://github.com/ProjectARCeth/RSLAM
-   version: save_load_map
+   version: save_load_bin
