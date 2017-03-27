@@ -27,9 +27,6 @@ chmod +x qt-opensource-linux-x64-5.7.0.run
 For ps3-driver:
 sudo apt-get install libusb-dev
 
-For pdf-analyser:
-sudo apt-get install python-pandas
-
 ##Using
 roslaunch arc_launch arc.launch Name:=(Desired path to created files) Mode:=(false [Teach] or true [Repeat])
 
