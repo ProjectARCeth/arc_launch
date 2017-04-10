@@ -71,11 +71,6 @@ safety/MAX_DEVIATION_FROM_TEACH_PATH: 100.0  #[m]
 safety/MIN_SHUTDOWN_VELOCITY: 1.0 #[m/s]
 safety/MAX_ORIENTATION_DIVERGENCE: 10 #[deg]
 safety/MIN_PUBLISH_NOTSTOP_COUNT: 20
-safety/STATIC_TOLERANCE_LASER: 2.0 #[m] ObstacleDetection
-safety/FACTOR_TOLERANCE_LASER: 0.12 #[m] ObstacleDetection
-safety/SEARCH_WIDTH: 1.5 #[m] ObstacleDetection
-
-
 
 #Control parameters.
 control/CURRENT_ARRAY_SEARCHING_WIDTH: 4.0  #[m]
