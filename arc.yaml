@@ -1,5 +1,6 @@
 #Car specific parameters.
 erod/DISTANCE_WHEEL_AXIS: 2.35585  #[m], distance between front and rear axis.
+erod/DISTANCE_VI_REAR_AXLE: 2.45 #[m] distance vi to rear axle.
 erod/DISTANCE_LASER_REAR_AXIS: 0.54968 #[m], parallel to road.
 erod/G_EARTH: 9.81 #[m/s²], earth gravitational constant.
 erod/HEIGHT_LASER_REAR_AXIS: 0.9 #[m], distance from laser to rear axis.
@@ -9,15 +10,15 @@ erod/MAX_ACCELERATING_VOLTAGE: 1.0 #[V], max. voltage of throttle.
 erod/MAX_LATERAL_ACCELERATION: 8 #[m/s²], max. lateral acceleration.
 erod/MAX_BRAKING_VOLTAGE: 12.0 #[V], max. voltage of braking system.
 erod/MAX_STEERING_ANGLE: 20 #[rad] +-° steering wheel impact.
-erod/MAX_VELOCITY: 17.5 #[m/s], ~70 km/h.
+erod/MAX_VELOCITY: 10 #[m/s], ~35 km/h.
 erod/MU_HAFT: 0.8 # friction parameter.
 erod/WHEEL_DIAMETER: 0.5 #[m]. 
 
 #Sensor calibration.
-sensor/CAM_INIT_QUAT_X: -0.00126 #Initial orientation measurement of cam.
-sensor/CAM_INIT_QUAT_Y: 0.85391 #Initial orientation measurement of cam.
-sensor/CAM_INIT_QUAT_Z: -0.52041 #Initial orientation measurement of cam.
-sensor/CAM_INIT_QUAT_W: 0.00033 #Initial orientation measurement of cam.
+sensor/CAM_INIT_QUAT_X: -0.00461417 #Initial orientation measurement of cam.
+sensor/CAM_INIT_QUAT_Y: 0.77827 #Initial orientation measurement of cam.
+sensor/CAM_INIT_QUAT_Z: -0.6279 #Initial orientation measurement of cam.
+sensor/CAM_INIT_QUAT_W: 0.0031027 #Initial orientation measurement of cam.
 
 #General code parameters.
 general/MY_PORT: 8010 #My computer port.
@@ -76,12 +77,14 @@ control/CURRENT_ARRAY_SEARCHING_WIDTH: 4.0  #[m]
 control/DISTANCE_INTERPOLATION: 3
 control/K1_LAD_LASER: 1.0
 control/K2_LAD_LASER: 5.0
-control/K1_LAD_S: 1 #Control parameter.
-control/K2_LAD_S: 2
+control/K1_LAD_S: 0.8 #Dynamisch
+control/K2_LAD_S: 0 #Statisch
 control/K1_LAD_V: 0.5
-control/K2_LAD_V: 3
-control/SHUT_DOWN_TIME: 5
-control/SLOW_DOWN_DISTANCE: 10
-control/SLOW_DOWN_PUFFER: 2
-control/V_FREEDOM: 1.5
+control/K2_LAD_V: 0
+control/SHUT_DOWN_TIME: 3
+control/SLOW_DOWN_DISTANCE: 8
+control/SLOW_DOWN_PUFFER: 5
+control/V_FREEDOM: 0.5
 control/NUMBER_OF_EMERGENCY_CELLS: 5
+control/UPPERBOUND_LAD_S: 7.3 #Empyrisch getestet
+control/LOWERBOUND_LAD_S: 3  #Empyrisch getestet
