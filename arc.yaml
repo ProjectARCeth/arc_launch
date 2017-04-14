@@ -37,7 +37,7 @@ topic/MODE: 'mode' #Teach(0) or Repeat(1), std_msgs::Bool.
 topic/NAVIGATION_INFO: 'navigation_info' #Information about pure pursuit, std_msgs::Float32MultiArray.
 topic/NOTSTOP: 'notstop' #Emergency stop command, std_msgs::Bool.
 topic/OBSTACLE_DISTANCE: 'distance_to_obstacle' #Distance to nearest obstacles, std_msgs::Float64.
-topic/OBSTACLE_MAP: 'obstacle_gridmap' #Gridmap with all obstacles, nav_msgs::GridMap.
+topic/OBSTACLE_MAP: 'gridmap' #Gridmap with all obstacles, nav_msgs::GridMap.
 topic/ORB_SLAM_ODOMETRY: 'orb_slam2/odometry' #Odometry from RSLAM, nav_msgs::Odometry.
 topic/PATH: 'path' #Current path, nav_msgs::Path.
 topic/READY_FOR_DRIVING: 'ready_for_driving' #Published after checking if all components are ready for driving, std_msgs::Bool.
@@ -89,10 +89,12 @@ control/K1_LAD_V: 0.5
 control/K2_LAD_V: 0
 control/SHUT_DOWN_TIME: 3
 control/SLOW_DOWN_DISTANCE: 8
-control/SLOW_DOWN_PUFFER: 5
+control/SLOW_DOWN_PUFFER: 3
 control/V_FREEDOM: 0.5
-control/NUMBER_OF_EMERGENCY_CELLS: 5
+control/NUMBER_OF_EMERGENCY_CELLS: 1
 control/UPPERBOUND_LAD_S: 7.3 #Empyrisch getestet
 control/LOWERBOUND_LAD_S: 3  #Empyrisch getestet
 control/EMERGENCY_DISTANCE_LB: 1  #Minimal obstacle distance for emergency brake to reach at 10km/h(to test)
 control/EMERGENCY_DISTANCE_UB: 6  #Maximal obstacle distance for emergency brake to reach at 40km/h(to test)
+control/OBSTACLE_SLOW_DOWN_DISTANCE: 15 #Start to slow down due to obstacle
+control/OBSTACLE_PUFFER_DISTANCE: 2 #v_ref at 0 due to obstacle
