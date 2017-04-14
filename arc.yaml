@@ -1,6 +1,7 @@
 #Car specific parameters.
 erod/DISTANCE_WHEEL_AXIS: 2.35585  #[m], distance between front and rear axis.
 erod/DISTANCE_VI_REAR_AXLE: 2.45 #[m] distance vi to rear axle.
+erod/DISTANCE_FRONT_TO_REAR_AXIS: 3 #[m] TO MEASURE!!!!!!!!!!!!!
 erod/DISTANCE_LASER_REAR_AXIS: 0.54968 #[m], parallel to road.
 erod/G_EARTH: 9.81 #[m/s²], earth gravitational constant.
 erod/HEIGHT_LASER_REAR_AXIS: 0.9 #[m], distance from laser to rear axis.
@@ -93,3 +94,5 @@ control/V_FREEDOM: 0.5
 control/NUMBER_OF_EMERGENCY_CELLS: 5
 control/UPPERBOUND_LAD_S: 7.3 #Empyrisch getestet
 control/LOWERBOUND_LAD_S: 3  #Empyrisch getestet
+control/EMERGENCY_DISTANCE_LB: 1  #Minimal obstacle distance for emergency brake to reach at 10km/h(to test)
+control/EMERGENCY_DISTANCE_UB: 6  #Maximal obstacle distance for emergency brake to reach at 40km/h(to test)
