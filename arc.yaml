@@ -64,9 +64,9 @@ topic/WHEEL_REAR_RIGHT: 'wheel_rear_right' #Wheel sensor callback, std_msgs::Flo
 
 #Safety parameters.
 safety/CRITICAL_OBSTACLE_DISTANCE: 2.0 #[m] 
-safety/FOS_VELOCITY: 1.0 #[0-1]
+safety/FOS_VELOCITY: 1.0 #[0-1] FOS for physical limit of velocity in curve
 safety/FOS_DANGERGRID: 1.5 #[>1]
-safety/FOS_BRAKING_DISTANCE: 2.0 #[>1]
+safety/FOS_BRAKING_DISTANCE: 2.0 #[>1] FOS for braking distance calculation.
 safety/MAX_ABSOLUTE_VELOCITY: 20
 safety/MAX_DEVIATION_FROM_TEACH_PATH: 100.0  #[m]
 safety/MIN_SHUTDOWN_VELOCITY: 1.0 #[m/s]
@@ -80,18 +80,18 @@ safety/SEARCH_WIDTH: 1.5 #[m] ObstacleDetection
 
 #Control parameters.
 control/CURRENT_ARRAY_SEARCHING_WIDTH: 4.0  #[m]
-control/DISTANCE_INTERPOLATION: 3
-control/K1_LAD_LASER: 1.0
-control/K2_LAD_LASER: 5.0
-control/K1_LAD_S: 0.8 #Dynamisch
-control/K2_LAD_S: 0 #Statisch
-control/K1_LAD_V: 0.5
-control/K2_LAD_V: 0
-control/SHUT_DOWN_TIME: 3
-control/SLOW_DOWN_DISTANCE: 8
-control/SLOW_DOWN_PUFFER: 3
-control/V_FREEDOM: 0.5
-control/NUMBER_OF_EMERGENCY_CELLS: 1
+control/DISTANCE_INTERPOLATION: 3 #Distance of three points for curvature calculation.
+control/K1_LAD_LASER: 1.0 #Dynamic part for lenght of path to inflate.
+control/K2_LAD_LASER: 5.0 #Static part for lenght of path to inflate.
+control/K1_LAD_S: 0.8 #Dynamic part for look ahead distance steer.
+control/K2_LAD_S: 0 #Statisch part for look ahead distance steer.
+control/K1_LAD_V: 0.5 #Dynamic part for lad radius for velocity.
+control/K2_LAD_V: 0 #Dynamic part for lad radius for velocity reference.
+control/SHUT_DOWN_TIME: 3 #Time to slow down to 0 in case of controlled shutdown.
+control/SLOW_DOWN_DISTANCE: 8 #Distance to end of path for car stating to slow down.
+control/SLOW_DOWN_PUFFER: 3 #Actual distance to end we will stop.
+control/V_FREEDOM: 0.5 #Allowed upper difference to teach velocity.
+control/NUMBER_OF_EMERGENCY_CELLS: 1 #number of consecutive apparences of obstacles closer than braking distance for notstop.
 control/UPPERBOUND_LAD_S: 7.3 #Empyrisch getestet
 control/LOWERBOUND_LAD_S: 3  #Empyrisch getestet
 control/EMERGENCY_DISTANCE_LB: 1  #Minimal obstacle distance for emergency brake to reach at 10km/h(to test)
