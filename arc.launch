@@ -11,12 +11,12 @@
   <!-- Localisation and state estimation -->
   <arg name="STATE_ESTIMATION" value="false"/>
   <!-- Steering and velocity controlling -->
-  <arg name="CONTROLLING" value="true" />
+  <arg name="CONTROLLING" value="false" />
   <!-- External communication -->
   <arg name="NI_CLIENT" value="false"/>
   <arg name="PS_CONTROLLER" value="false"/>
   <!-- Safety -->
-  <arg name="OBSTACLE_DETECTION" value="true"/> 
+  <arg name="OBSTACLE_DETECTION" value="false"/> 
   <arg name="GUARD" value="false"/>
   <!-- Visualisation -->
   <arg name="GUI" value="false"/>
