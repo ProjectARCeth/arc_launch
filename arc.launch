@@ -9,7 +9,7 @@
   <arg name="VI" value="false" /> 
   <arg name="VELODYNE" value="false" />
   <!-- Localisation and state estimation -->
-  <arg name="STATE_ESTIMATION" value="true"/>
+  <arg name="STATE_ESTIMATION" value="false"/>
   <!-- Steering and velocity controlling -->
   <arg name="CONTROLLING" value="false" />
   <!-- External communication -->
@@ -20,8 +20,13 @@
   <arg name="GUARD" value="false"/>
   <!-- Visualisation -->
   <arg name="GUI" value="false"/>
+<<<<<<< HEAD
   <arg name="ORB_VISUALISATION" value="true"/>
   <arg name="PDF" value="true"/>
+=======
+  <arg name="ORB_VISUALISATION" value="false"/>
+  <arg name="PDF" value="false"/>
+>>>>>>> 1431dd8ea52a3c753f6c41ce6e001e286aa27046
   <arg name="VOICE" value="false"/>
   <!-- Rosbag -->
   <arg name="ROSBAG_PLAY" value="false"/> 
