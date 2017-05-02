@@ -1,0 +1,1 @@
+rosbag record /cam0/image_raw /cam1/image_raw /imu0 /wheel_rear_left /wheel_rear_right /state_steering_angle -O /home/arcsystem/bags/test.bag
