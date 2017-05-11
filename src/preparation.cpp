@@ -136,8 +136,8 @@ int main(int argc, char** argv){
 			vcu_ping_pub.publish(vcu_ping_msg);
 			std_msgs::Float64 vcu_mode_msg;
 			vcu_mode_msg.data = 1.0;
-			if(VCU_PARAMETER_MODE == "street") vcu_mode_msg.data = 1.0;
-			if(VCU_PARAMETER_MODE == "lift") vcu_mode_msg.data = 0.0;
+			// if(VCU_PARAMETER_MODE == "street") vcu_mode_msg.data = 1.0;
+			// if(VCU_PARAMETER_MODE == "lift") vcu_mode_msg.data = 0.0;
 			vcu_mode_pub.publish(vcu_mode_msg);
 		}
 		//Publishing launch information.
@@ -164,7 +164,6 @@ int main(int argc, char** argv){
 	ready_for_driving_msg.data = true;
 	ready_driving_pub.publish(ready_for_driving_msg);
 	std::cout << std::endl <<"PREPARATION: Everything initialised, ready to go !" << std::endl;
-	while(ros::ok()){}
 	return 0;
 }
 
@@ -219,6 +218,7 @@ void initPrepartion(ros::NodeHandle* node){
 	node->getParam("/topic/STELLGROESSEN_SAFE", GUARD_TOPIC);
 	node->getParam("/topic/STELLGROESSEN_SAFE", STELLGROESSEN_TOPIC);
 	node->getParam("/topic/VCU_WORKING_INTERFACE", VCU_WORKING_INTERFACE_TOPIC);
+	node->getParam("/topic/VCU_PARAMETER_MODE", VCU_PARAMETER_MODE_TOPIC);
 	node->getParam("/topic/VELODYNE_POINTCLOUD", VELODYNE_TOPIC);
 	node->getParam("/topic/VI_CAMERA_LEFT", VI_TOPIC);
 	//Setting publisher and subcriber.

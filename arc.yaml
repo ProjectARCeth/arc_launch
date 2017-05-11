@@ -16,22 +16,25 @@ erod/MU_HAFT: 0.8 # friction parameter.
 erod/WHEEL_DIAMETER: 0.5 #[m]. 
 
 #Sensor calibration.
-sensor/CAM_INIT_QUAT_X: 0.0041 #Initial orientation measurement of cam.
-sensor/CAM_INIT_QUAT_Y: 0.7754 #Initial orientation measurement of cam.
-sensor/CAM_INIT_QUAT_Z: -0.6314 #Initial orientation measurement of cam.
-sensor/CAM_INIT_QUAT_W: 0.0032 #Initial orientation measurement of cam.
+#sensor/CAM_INIT_QUAT_X: 0.02661522 #Initial orientation measurement of cam.
+#sensor/CAM_INIT_QUAT_Y: 0.78158989 #Initial orientation measurement of cam.
+#sensor/CAM_INIT_QUAT_Z: -0.62321487 #Initial orientation measurement of cam.
+#sensor/CAM_INIT_QUAT_W: 0.00313348 #Initial orientation measurement of cam.
+
+#Sensor calibration.
+sensor/CAM_INIT_QUAT_X: 0.0034 #Initial orientation measurement of cam.
+sensor/CAM_INIT_QUAT_Y: 0.7792 #Initial orientation measurement of cam.
+sensor/CAM_INIT_QUAT_Z: -0.6266 #Initial orientation measurement of cam.
+sensor/CAM_INIT_QUAT_W: 0.0031 #Initial orientation measurement of cam.
 
 #General code parameters.
 general/MY_PORT: 8010 #My computer port.
 general/NI_PORT: 8001 #National Instrument Port.
 general/QUEUE_LENGTH: 1  #proportional to update frequency.
-general/VCU_PARAMETER_MODE: 'street' #street or lift VCU - velocity control parameter mode.
-general/PURE_PURSUIT_RATE: 20 #Ros spin rate of pure pursuit
-general/STEER_PER_SECOND: 0.349 #In radiant. Corresponds to 20 grad per second is fastest we want to turn  
-<<<<<<< HEAD
-=======
+general/VCU_PARAMETER_MODE: "street" #street or lift VCU - velocity control parameter mode.
+general/PURE_PURSUIT_RATE: 10 #Ros spin rate of pure pursuit
+general/STEER_PER_SECOND: 0.6 #In radiant. Corresponds to 20 grad per second is fastest we want to turn  
 
->>>>>>> 1431dd8ea52a3c753f6c41ce6e001e286aa27046
 #Topics.
 topic/CAR_MODEL_VELOCITY: 'car_model_velocity' #Linear velocity by velocity model, geometry_msgs::TwistStamped.
 topic/DANGER_GRID: 'danger_grid' #Dangerous area in front of car, nav_msgs::GridMap.
@@ -69,55 +72,36 @@ topic/WHEEL_REAR_RIGHT: 'wheel_rear_right' #Wheel sensor callback, std_msgs::Flo
 
 #Safety parameters.
 safety/CRITICAL_OBSTACLE_DISTANCE: 2.0 #[m] 
-<<<<<<< HEAD
 safety/FOS_VELOCITY: 1.0 #[0-1]
 safety/FOS_DANGERGRID: 1.0 #[>1]
 safety/FOS_BRAKING_DISTANCE: 10.0 #[>1]
-=======
 safety/FOS_VELOCITY: 1.0 #[0-1] FOS for physical limit of velocity in curve
 safety/FOS_DANGERGRID: 1.5 #[>1]
 safety/FOS_BRAKING_DISTANCE: 2.0 #[>1] FOS for braking distance calculation.
->>>>>>> 1431dd8ea52a3c753f6c41ce6e001e286aa27046
 safety/MAX_ABSOLUTE_VELOCITY: 20
 safety/MAX_DEVIATION_FROM_TEACH_PATH: 100.0  #[m]
 safety/MIN_SHUTDOWN_VELOCITY: 1.0 #[m/s]
 safety/MAX_ORIENTATION_DIVERGENCE: 10 #[deg]
 safety/MIN_PUBLISH_NOTSTOP_COUNT: 20
 safety/STATIC_TOLERANCE_LASER: 1.7 #[] ObstacleDetection
-safety/FACTOR_TOLERANCE_LASER: 0.12 #[m] ObstacleDetection
-safety/SEARCH_WIDTH: 1.5 #[m] ObstacleDetection
-
+safety/FACTOR_TOLERANCE_LASER: 0.35 #[m] ObstacleDetection
+safety/SEARCH_WIDTH: 1.5 #[m] ObstacleDetection																																																				
 #Control parameters.
-control/CURRENT_ARRAY_SEARCHING_WIDTH: 4.0  #[m]
-<<<<<<< HEAD
+control/CURRENT_ARRAY_SEARCHING_WIDTH: 40.0  #[m]
 control/DISTANCE_INTERPOLATION: 3
 control/K1_LAD_LASER: 1.0
 control/K2_LAD_LASER: 5.0
-control/K1_LAD_S: 1.1 #Dynamisch
+control/K1_LAD_S: 1.5 #Dynamisch
 control/K2_LAD_S: 0 #Statisch
 control/K1_LAD_V: 0.5
 control/K2_LAD_V: 0
 control/SHUT_DOWN_TIME: 3
-control/SLOW_DOWN_DISTANCE: 8
+control/SLOW_DOWN_DISTANCE: 6
 control/SLOW_DOWN_PUFFER: 3
-control/V_FREEDOM: 0.1
+control/V_FREEDOM: 0.01
 control/NUMBER_OF_EMERGENCY_CELLS: 1
-=======
-control/DISTANCE_INTERPOLATION: 3 #Distance of three points for curvature calculation.
-control/K1_LAD_LASER: 1.0 #Dynamic part for lenght of path to inflate.
-control/K2_LAD_LASER: 5.0 #Static part for lenght of path to inflate.
-control/K1_LAD_S: 0.8 #Dynamic part for look ahead distance steer.
-control/K2_LAD_S: 0 #Statisch part for look ahead distance steer.
-control/K1_LAD_V: 0.5 #Dynamic part for lad radius for velocity.
-control/K2_LAD_V: 0 #Dynamic part for lad radius for velocity reference.
-control/SHUT_DOWN_TIME: 3 #Time to slow down to 0 in case of controlled shutdown.
-control/SLOW_DOWN_DISTANCE: 8 #Distance to end of path for car stating to slow down.
-control/SLOW_DOWN_PUFFER: 3 #Actual distance to end we will stop.
-control/V_FREEDOM: 0.5 #Allowed upper difference to teach velocity.
-control/NUMBER_OF_EMERGENCY_CELLS: 1 #number of consecutive apparences of obstacles closer than braking distance for notstop.
->>>>>>> 1431dd8ea52a3c753f6c41ce6e001e286aa27046
-control/UPPERBOUND_LAD_S: 7.3 #Empyrisch getestet
-control/LOWERBOUND_LAD_S: 3  #Empyrisch getestet
+control/UPPERBOUND_LAD_S: 13 #Empyrisch getestet
+control/LOWERBOUND_LAD_S: 3.5  #Empyrisch getestet
 control/EMERGENCY_DISTANCE_LB: 1  #Minimal obstacle distance for emergency brake to reach at 10km/h(to test)
 control/EMERGENCY_DISTANCE_UB: 6  #Maximal obstacle distance for emergency brake to reach at 40km/h(to test)
 control/OBSTACLE_SLOW_DOWN_DISTANCE: 15 #Start to slow down due to obstacle
