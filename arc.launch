@@ -30,10 +30,11 @@
   <arg name="Name" default="/home/arcsystem/paths/test" />
   <arg name="Mode" default="true" /> 
   <arg name="Path_Length" default="full" /> 
+  <arg name="Button_Start" default="true" />
 
  <!-- Preparation -->
 
- <node name="preparation" pkg="arc_launch" type="preparation" output="screen" args="$(arg Name) $(arg Mode) $(arg Path_Length) $(arg GPS) $(arg VI) $(arg VELODYNE) $(arg NI_CLIENT) $(arg STATE_ESTIMATION) $(arg OBSTACLE_DETECTION) $(arg GUARD) $(arg CONTROLLING)" />
+ <node name="preparation" pkg="arc_launch" type="preparation" output="screen" args="$(arg Name) $(arg Mode) $(arg Path_Length) $(arg GPS) $(arg VI) $(arg VELODYNE) $(arg NI_CLIENT) $(arg STATE_ESTIMATION) $(arg OBSTACLE_DETECTION) $(arg GUARD) $(arg CONTROLLING) $(arg Button_Start)" />
 
   <!-- GPS -->
   <node name="gps" pkg="ublox_gps" type="ublox_gps" output="screen" if="$(arg GPS)">
@@ -89,7 +90,7 @@
 
   <!-- starting state estimation node -->
 
-  <node name="state_estimation" pkg="arc_state_estimation" type="state_estimation" output="screen" args="$(arg Name) $(arg Mode)" if="$(arg STATE_ESTIMATION)"/> 
+  <node name="state_estimation" pkg="arc_state_estimation" type="state_estimation" output="screen" args="$(arg Name) $(arg Mode)" if="$(arg STATE_ESTIMATION)" required="true"/> 
   <!-- starting ORB_SLAM (VOC-PATH CFG-PATH USE-VIEWER Reuse-Map Map-Name)--> 
   <node pkg="orb_slam2" type="stereo" name="stereo" args="$(find orb_slam2)/../../../Vocabulary/ORBvoc.txt  $(find orb_slam2)/../../Stereo/ARC_old.yaml $(arg ORB_VISUALISATION) $(arg Mode) $(arg Name) $(arg Name)" output="screen" if="$(arg STATE_ESTIMATION)" >
   	<remap from="/camera/left/image_raw" to="/cam0/image_raw"/>

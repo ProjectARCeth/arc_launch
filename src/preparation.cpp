@@ -18,6 +18,7 @@
 
 //Constants.
 bool INIT_MODE = true;
+bool BUTTON_START = true;
 std::string PATH_NAME;
 std::string PATH_LENGTH;
 int QUEUE_LENGTH;
@@ -34,6 +35,7 @@ std::string ROVIO_TOPIC;
 std::string STATE_ESTIMATION_TOPIC;
 std::string STELLGROESSEN_TOPIC;
 std::string VELODYNE_TOPIC;
+std::string VCU_LAUNCHING_TOPIC;
 std::string VCU_PARAMETER_MODE_TOPIC;
 std::string VCU_WORKING_INTERFACE_TOPIC;
 std::string VI_TOPIC;
@@ -73,6 +75,7 @@ ros::Publisher launching_info_pub;
 ros::Publisher ready_driving_pub;
 ros::Publisher ready_launching_pub;
 ros::Publisher stellgroessen_reset_pub;
+ros::Publisher vcu_launching_pub;
 ros::Publisher vcu_mode_pub;
 ros::Publisher vcu_ping_pub;
 //Declaration of functions.
@@ -107,6 +110,7 @@ int main(int argc, char** argv){
 	if(strlen(*(argv + 9)) == 5) USE_OBSTACLE_DETECTION = false;
 	if(strlen(*(argv + 10)) == 5) USE_GUARD = false;
 	if(strlen(*(argv + 11)) == 5) USE_CONTROLLING = false;
+	if(strlen(*(argv + 12)) == 5) BUTTON_START = false;
 	//Initialise.
 	initPrepartion(&node);
 	//Edit path file and starting pure pursuit.
@@ -155,15 +159,19 @@ int main(int argc, char** argv){
 		//Checking if nodes running.
 		checkingAllInitialised();
 		//Controlling loop.
-		
 		ros::spinOnce();
 		loop_rate.sleep();
-		
 	}
 	std_msgs::Bool ready_for_driving_msg;
 	ready_for_driving_msg.data = true;
 	ready_driving_pub.publish(ready_for_driving_msg);
 	std::cout << std::endl <<"PREPARATION: Everything initialised, ready to go !" << std::endl;
+	//Starting automatically iff button start is not set.
+	if(!BUTTON_START && INIT_MODE){
+		std_msgs::Bool launching_msg;
+        launching_msg.data = true;
+        vcu_launching_pub.publish(launching_msg);
+	}
 	return 0;
 }
 
@@ -217,8 +225,9 @@ void initPrepartion(ros::NodeHandle* node){
 	node->getParam("/topic/STELLGROESSEN", PURE_PURSUIT_TOPIC);
 	node->getParam("/topic/STELLGROESSEN_SAFE", GUARD_TOPIC);
 	node->getParam("/topic/STELLGROESSEN_SAFE", STELLGROESSEN_TOPIC);
-	node->getParam("/topic/VCU_WORKING_INTERFACE", VCU_WORKING_INTERFACE_TOPIC);
+	node->getParam("/topic/VCU_LAUNCHING_COMMAND", VCU_LAUNCHING_TOPIC);
 	node->getParam("/topic/VCU_PARAMETER_MODE", VCU_PARAMETER_MODE_TOPIC);
+	node->getParam("/topic/VCU_WORKING_INTERFACE", VCU_WORKING_INTERFACE_TOPIC);
 	node->getParam("/topic/VELODYNE_POINTCLOUD", VELODYNE_TOPIC);
 	node->getParam("/topic/VI_CAMERA_LEFT", VI_TOPIC);
 	//Setting publisher and subcriber.
@@ -226,6 +235,7 @@ void initPrepartion(ros::NodeHandle* node){
 	ready_driving_pub = node->advertise<std_msgs::Bool>(READY_FOR_DRIVING_TOPIC, QUEUE_LENGTH);
 	ready_launching_pub = node->advertise<std_msgs::Bool>(READY_FOR_LAUNCHING_TOPIC, QUEUE_LENGTH);
 	stellgroessen_reset_pub = node->advertise<ackermann_msgs::AckermannDrive>(STELLGROESSEN_TOPIC, QUEUE_LENGTH);
+	vcu_launching_pub = node->advertise<std_msgs::Bool>(VCU_LAUNCHING_TOPIC, QUEUE_LENGTH);
 	vcu_mode_pub = node->advertise<std_msgs::Float64>(VCU_PARAMETER_MODE_TOPIC, QUEUE_LENGTH);
 	vcu_ping_pub = node->advertise<std_msgs::Float64>(VCU_WORKING_INTERFACE_TOPIC, QUEUE_LENGTH);
 	if(USE_CONTROLLING) pure_pursuit_sub = node->subscribe(PURE_PURSUIT_TOPIC, QUEUE_LENGTH, purePursuitCallback);
@@ -255,8 +265,17 @@ void obstacleCallback(const std_msgs::Bool::ConstPtr& msg){
 }
 
 void orbslamCallback(const nav_msgs::Odometry::ConstPtr& msg){
-	if(!READY_ORBSLAM) std::cout << "PREPARATION: RSLAM initialised" << std::endl;
-	READY_ORBSLAM = true;
+	double position_value = msg->pose.pose.position.x*msg->pose.pose.position.x + msg->pose.pose.position.y*msg->pose.pose.position.y
+							+ msg->pose.pose.position.z*msg->pose.pose.position.z;
+	if(INIT_MODE && position_value > 0.0){
+		if(!READY_ORBSLAM) std::cout << "PREPARATION: RSLAM initialised" << std::endl;
+		READY_ORBSLAM = true;
+		return;
+	}
+	if(!INIT_MODE){
+		if(!READY_ORBSLAM) std::cout << "PREPARATION: RSLAM initialised" << std::endl;
+		READY_ORBSLAM = true;
+	}	
 }
 
 void purePursuitCallback(const ackermann_msgs::AckermannDrive::ConstPtr& msg){

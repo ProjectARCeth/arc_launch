@@ -13,34 +13,34 @@
   <!-- Steering and velocity controlling -->
   <arg name="CONTROLLING" value="false" />
   <!-- External communication -->
-  <arg name="NI_CLIENT" value="false"/>
+  <arg name="NI_CLIENT" value="true"/>
   <arg name="PS_CONTROLLER" value="false"/>
   <!-- Safety -->
   <arg name="OBSTACLE_DETECTION" value="false"/> 
-  <arg name="GUARD" value="true"/>
+  <arg name="GUARD" value="false"/>
   <!-- Visualisation -->
   <arg name="GUI" value="false"/>
   <arg name="ORB_VISUALISATION" value="true"/>
-  <arg name="PDF" value="true"/>
+  <arg name="PDF" value="false"/>
   <arg name="VOICE" value="false"/>
   <!-- Rosbag -->
-  <arg name="ROSBAG_PLAY" value="false"/> 
-  <arg name="ROSBAG_PLAY_PATH" value="/home/sele/Schreibtisch/Hoengg_Mittlere_Runde_mit_Wheel.bag"/>
+  <arg name="ROSBAG_PLAY" value="true"/> 
  
   <!-- Launch parameters: Name = name of testing, Mode = teach(false), repeat(true), Path_Length =  length of drivable path from beginning -->
-  <arg name="Name" default="/home/sele/Paths/test" />
+  <arg name="Name" default="/home/arcsystem/paths/test" />
   <arg name="Mode" default="true" /> 
   <arg name="Path_Length" default="full" /> 
+  <arg name="Button_Start" default="true" />
 
  <!-- Preparation -->
 
- <node name="preparation" pkg="arc_launch" type="preparation" output="screen" args="$(arg Name) $(arg Mode) $(arg Path_Length) $(arg GPS) $(arg VI) $(arg VELODYNE) $(arg NI_CLIENT) $(arg STATE_ESTIMATION) $(arg OBSTACLE_DETECTION) $(arg GUARD) $(arg CONTROLLING)" />
+ <node name="preparation" pkg="arc_launch" type="preparation" output="screen" args="$(arg Name) $(arg Mode) $(arg Path_Length) $(arg GPS) $(arg VI) $(arg VELODYNE) $(arg NI_CLIENT) $(arg STATE_ESTIMATION) $(arg OBSTACLE_DETECTION) $(arg GUARD) $(arg CONTROLLING) $(arg Button_Start)" />
 
   <!-- GPS -->
   <node name="gps" pkg="ublox_gps" type="ublox_gps" output="screen" if="$(arg GPS)">
   	 <param name="device" type="string" value="/dev/ttyACM0"/>
    	 <param name="frame_id" type="string" value="gps"/>
-   	 <param name="baudrate" type="int" value="57600"/>
+   	 <param name="baudrate" type="int" value="9600"/>
    	 <param name="rate" type="int" value="10"/>
    	 <param name="enable_sbas" type="bool" value="false"/>
    	 <param name="dynamic_model" type="string" value="portable"/>
@@ -90,32 +90,33 @@
 
   <!-- starting state estimation node -->
 
-  <node name="state_estimation" pkg="arc_state_estimation" type="state_estimation" output="screen" args="$(arg Name) $(arg Mode)" if="$(arg STATE_ESTIMATION)"/> 
+  <node name="state_estimation" pkg="arc_state_estimation" type="state_estimation" output="screen" args="$(arg Name) $(arg Mode)" if="$(arg STATE_ESTIMATION)" required="true"/> 
   <!-- starting ORB_SLAM (VOC-PATH CFG-PATH USE-VIEWER Reuse-Map Map-Name)--> 
-  <node pkg="orb_slam2" type="stereo" name="stereo" args="$(find orb_slam2)/../../../Vocabulary/ORBvoc.txt   $(find orb_slam2)/../../Stereo/ARC.yaml $(arg ORB_VISUALISATION) $(arg Mode) $(arg Name) $(arg Name)" output="screen" if="$(arg STATE_ESTIMATION)" >
+  <node pkg="orb_slam2" type="stereo" name="stereo" args="$(find orb_slam2)/../../../Vocabulary/ORBvoc.txt  $(find orb_slam2)/../../Stereo/ARC_old.yaml $(arg ORB_VISUALISATION) $(arg Mode) $(arg Name) $(arg Name)" output="screen" if="$(arg STATE_ESTIMATION)" >
   	<remap from="/camera/left/image_raw" to="/cam0/image_raw"/>
   	<remap from="/camera/right/image_raw" to="/cam1/image_raw"/>
   </node>
   <!-- starting Rovio -->
   <node pkg="rovio" type="rovio_node" name="rovio" output="screen" if="$(arg STATE_ESTIMATION)">
-   <param name="filter_config" value="$(find rovio)/cfg/rovio_test.info"/>
+   <param name="filter_config" value="$(find rovio)/cfg/arc_old.info"/>
    <param name="camera0_config" value="$(find rovio)/cfg/rovio_cam0.yaml"/>
    <param name="camera1_config" value="$(find rovio)/cfg/rovio_cam1.yaml"/>
-  </node>
+  <param name="use_car_model_as_odom" value="false"/>
+  </node> 
 
   <!-- Controlling and Safety: Only teach software -->
-  <group if="$(arg Mode)">
+    <group if="$(arg Mode)"> 
         <!--starting Guard -->
 	<node name="high_level_guard" pkg="guard" type="high_level_guard" output="screen" args="$(arg GUARD)" /> 
   	<!--starting obstacle-detection -->
   	<node name="obstacle_detection_node" pkg="arc_obstacle_detection" type="obstacle_detection_node" output="screen" if="$(arg OBSTACLE_DETECTION)"/>
- 	 <node name="grid_analyser_node" pkg="grid_analyser" type="grid_analyser_node" output="screen" if="$(arg OBSTACLE_DETECTION)" />
+ 	   <node name="grid_analyser_node" pkg="grid_analyser" type="grid_analyser_node" output="screen" args="$(arg Name)" if="$(arg OBSTACLE_DETECTION)" />
  	 <!--starting Controlling -->
   	<node name="regler_node" pkg="pure_pursuit_controller" type="regler_node" output="screen"  args="$(arg Name)" if="$(arg CONTROLLING)" />
   </group>
 	
  <!-- starting NI client -->
- <node name="udp_client" type="udp_client" pkg="arc_interface" output="screen" if="$(arg NI_CLIENT)" />
+ <node name="udp_client" type="udp_client" pkg="arc_interface" output="screen" args="$(arg ROSBAG_PLAY)" if="$(arg NI_CLIENT)" />
 
   <!-- starting GUI -->
   <node name="arc_gui" pkg="arc_viewer" type="arc_gui" output="screen" args="$(arg Mode) $(arg GPS) $(arg VI) $(arg VELODYNE) $(arg NI_CLIENT) $(arg STATE_ESTIMATION) $(arg OBSTACLE_DETECTION) $(arg GUARD) $(arg CONTROLLING)" if="$(arg GUI)" />	
@@ -131,10 +132,8 @@
   <!-- PDF analysis -->
   <node name="pdf_analyse" pkg="arc_viewer" type="pdf_analyse.py" output="screen" args="$(arg Name)" if="$(arg PDF)" />
   <!-- Voice Callback -->
-  <node name="arc_voice" pkg="arc_viewer" type="play_voice.py" output="screen" if="$(arg VOICE)"/>
+  <node name="arc_voice" pkg="arc_viewer" type="play_voice.py" output="screen" if="$(arg VOICE)" />
 
-  <!-- Recording and playing rosbag -->
-  <node pkg="rosbag" type="play" output="screen" name="bag" args="$(arg ROSBAG_PLAY_PATH)" if="$(arg ROSBAG_PLAY)" />
 
 </launch>
 
