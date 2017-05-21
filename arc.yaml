@@ -73,25 +73,22 @@ topic/WHEEL_REAR_RIGHT: 'wheel_rear_right' #Wheel sensor callback, std_msgs::Flo
 #Safety parameters.
 safety/CRITICAL_OBSTACLE_DISTANCE: 2.0 #[m] 
 safety/FOS_VELOCITY: 1.0 #[0-1]
-safety/FOS_DANGERGRID: 1.0 #[>1]
-safety/FOS_BRAKING_DISTANCE: 10.0 #[>1]
-safety/FOS_VELOCITY: 1.0 #[0-1] FOS for physical limit of velocity in curve
-safety/FOS_DANGERGRID: 1.5 #[>1]
+safety/FOS_DANGERGRID: 1.6 #[>1]
 safety/FOS_BRAKING_DISTANCE: 2.0 #[>1] FOS for braking distance calculation.
 safety/MAX_ABSOLUTE_VELOCITY: 20
 safety/MAX_DEVIATION_FROM_TEACH_PATH: 100.0  #[m]
 safety/MIN_SHUTDOWN_VELOCITY: 1.0 #[m/s]
 safety/MAX_ORIENTATION_DIVERGENCE: 10 #[deg]
 safety/MIN_PUBLISH_NOTSTOP_COUNT: 20
-safety/STATIC_TOLERANCE_LASER: 1.7 #[] ObstacleDetection
-safety/FACTOR_TOLERANCE_LASER: 0.35 #[m] ObstacleDetection
+safety/STATIC_TOLERANCE_LASER: 0.3 # 1.7/0.3[] ObstacleDetection
+safety/FACTOR_TOLERANCE_LASER: 0.1 # 0.35/0.1s[m] ObstacleDetection
 safety/SEARCH_WIDTH: 1.5 #[m] ObstacleDetection																																																				
 #Control parameters.
-control/CURRENT_ARRAY_SEARCHING_WIDTH: 40.0  #[m]
-control/DISTANCE_INTERPOLATION: 3
+control/CURRENT_ARRAY_SEARCHING_WIDTH: 1000.0  #[m] while driving
+control/DISTANCE_INTERPOLATION: 5
 control/K1_LAD_LASER: 1.0
-control/K2_LAD_LASER: 5.0
-control/K1_LAD_S: 1.5 #Dynamisch
+control/K2_LAD_LASER: 15.0
+control/K1_LAD_S: 1.5 #Dynamisch 1.5
 control/K2_LAD_S: 0 #Statisch
 control/K1_LAD_V: 0.5
 control/K2_LAD_V: 0
@@ -100,9 +97,9 @@ control/SLOW_DOWN_DISTANCE: 6
 control/SLOW_DOWN_PUFFER: 3
 control/V_FREEDOM: 0.01
 control/NUMBER_OF_EMERGENCY_CELLS: 1
-control/UPPERBOUND_LAD_S: 13 #Empyrisch getestet
+control/UPPERBOUND_LAD_S: 13 #13Empyrisch getestet
 control/LOWERBOUND_LAD_S: 3.5  #Empyrisch getestet
-control/EMERGENCY_DISTANCE_LB: 1  #Minimal obstacle distance for emergency brake to reach at 10km/h(to test)
+control/EMERGENCY_DISTANCE_LB: 3  #Minimal obstacle distance for emergency brake to reach at 10km/h(to test)
 control/EMERGENCY_DISTANCE_UB: 6  #Maximal obstacle distance for emergency brake to reach at 40km/h(to test)
-control/OBSTACLE_SLOW_DOWN_DISTANCE: 15 #Start to slow down due to obstacle
-control/OBSTACLE_PUFFER_DISTANCE: 2 #v_ref at 0 due to obstacle
+control/OBSTACLE_SLOW_DOWN_DISTANCE: 10 #Start to slow down due to obstacle
+control/OBSTACLE_PUFFER_DISTANCE: 7 #v_ref at 0 due to obstacle
