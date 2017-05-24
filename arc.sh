@@ -1,6 +1,6 @@
 #!/bin/sh
 #Input arguments: path_name. 
-FILE_PATH="/home/sele/paths"
+FILE_PATH="/home/arcsystem/paths"
 cd "$FILE_PATH"
 if [ ! -f "$FILE_PATH/$1/1.bin" ]; then
 	echo "Path does not exist !"

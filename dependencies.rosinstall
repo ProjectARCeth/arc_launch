@@ -10,18 +10,22 @@
 - git:
    local-name: arc_tools
    uri: https://github.com/ProjectARCeth/arc_tools
+   version: new
 - git:
    local-name: arc_interface
    uri: https://github.com/ProjectARCeth/arc_interface
+   version: master
 - git:
    local-name: arc_viewer
    uri: https://github.com/ProjectARCeth/arc_viewer
 - git:
    local-name: arc_obstacle_detection
    uri: https://github.com/ProjectARCeth/arc_obstacle_detection
+   version: 2_Filter
 - git:
    local-name: arc_state_estimation
    uri: https://github.com/ProjectARCeth/arc_state_estimation
+   version: fixLOOP
 - git:
    local-name: joystick-drivers
    uri: https://github.com/ProjectARCeth/joystick_drivers
@@ -44,8 +48,8 @@
    local-name: kindr
    uri: https://github.com/ethz-asl/kindr
 - git:
-   local-name: visensor_node
-   uri: https://github.com/ethz-asl/visensor_node
+   local-name: visensor_node_devel
+   uri: https://github.com/ethz-asl/visensor_node_devel
 - git: 
    local-name: velodyne
    uri: https://github.com/ros-drivers/velodyne
@@ -61,8 +65,9 @@
 - git:
    local-name: RSLAM
    uri: https://github.com/ProjectARCeth/RSLAM
-<<<<<<< HEAD
-   version: save_load_bin
-=======
-   version: save_load_map
->>>>>>> a8cefb33b8062adaae81f9ea78e3de76f52d3647
+   version: 2.FastMapLoad
+   - git:
+   local-name: usb_cam
+   uri: https://github.com/ProjectARCConeDetection/usb_cam
+   version: arc
+
